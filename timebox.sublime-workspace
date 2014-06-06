@@ -1,0 +1,422 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"r",
+				"reverseString"
+			],
+			[
+				"font-",
+				"font-size"
+			],
+			[
+				"size",
+				"font-size"
+			],
+			[
+				"an",
+				"analyserNode"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "timebox.js",
+			"settings":
+			{
+				"buffer_size": 425,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "timebox.html",
+			"settings":
+			{
+				"buffer_size": 186,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "timebox.css",
+			"settings":
+			{
+				"buffer_size": 31,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 387.0,
+		"selected_items":
+		[
+			[
+				"gith",
+				"GitHub: History"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Self Improvement/Gratitude Journal",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting_2014",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Metasystem",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/NextActions",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown Reprise",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Stardust",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/resounding.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/login_client.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/audio.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/tagTest/tagTest.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/resounding.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/coffee-resounding/coffee-resounding.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mochaTest/test/taskTest.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mochaTest/src/task.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/nodeTest/example.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/nodeTest/example.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/algorithmsPractice/recursion.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/coffee-resounding/test/resoundingTest.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/When I Die",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/God Wrote the World",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Uplift",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Brighter Than Today",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Five Thousand Years",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Something Impossible",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bring the Light",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/A Little Echo",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Blue Skies",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/When I Die",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Move the World",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Find My Tribe",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/README.md",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/resounding.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/audioAccess.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mochaTest",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/Plain text.sublime-settings",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/JavaScript.sublime-settings",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/drawing.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/.meteor/local/build/programs/client/app/client/login_client.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/.meteor/local/build/programs/client/app/client/audioAccess.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/.meteor/local/build/programs/client/app/client/drawing.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/resounding/resounding.html",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/resounding/client/audioAccess.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/resounding/resounding.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Getting Things Done/Review",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Getting Things Done/Metasystem",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/sona/sona.html",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Song Lyrics/Find My Tribe",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/empire_short/empire.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/sona/soundtest.html",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/empire_short/empire.html",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/sona/client/webcam-access.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/sona/sona.js",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Meteor/resounding/resounding.css",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Self Improvement/REV - Reverse Engineering the Future",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Self Improvement/Gratitude Journal",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Effective Altruism/EA_102_Freewriting",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Song Lyrics/Then There Wasn't",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Getting Things Done/Val's System",
+		"/Users/raymondarnold/Dropbox/Sublime Docs/Self Improvement/Charisma Myth Outline",
+		"/Users/raymondarnold/Dropbox/Meteor/PitchDetect/index.html",
+		"/Users/raymondarnold/Dropbox/Meteor/PitchDetect/js/pitchdetect.js",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/Distraction Free.sublime-settings",
+		"/Users/raymondarnold/Dropbox/Self Improvement/ToDoList",
+		"/Users/raymondarnold/Dropbox/Self Improvement/ToDoList_in",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/04_wonky_coins_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/03_ordered_vowels_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/02_letter_count_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/01_no_repeats_spec.rb",
+		"/Users/raymondarnold/Dropbox/PythonRamblings/Exercises",
+		"/Users/raymondarnold/Dropbox/PythonRamblings/CityWorld.py",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/05_morse_code_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/python_lib/00_nearest_larger.py",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/00_nearest_larger_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/06_word_unscrambler_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/08_bubble_sort_spec.rb",
+		"/Users/raymondarnold/Dropbox/RailsStuff/prep-work-master/coding-test-2/practice-problems/spec/07_rectangle_intersection_spec.py",
+		"/Users/raymondarnold/Dropbox/Effective Altruism/Effective Altruism E-Mail Shorthand",
+		"/Users/raymondarnold/Dropbox/Self Improvement/2014-02-28___EA-evaluationNotes",
+		"/Users/raymondarnold/Dropbox/PythonRamblings/cracklePop.py",
+		"/Users/raymondarnold/Dropbox/Self Improvement/SavingTheWorld.jpg",
+		"/Users/raymondarnold/Dropbox/Python Ramblings/cracklePop.py",
+		"/Users/raymondarnold/Dropbox/Sunday Assembly/anecdote",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/Accelence/automation.py",
+		"/Users/raymondarnold/Dropbox/Meteor/sona/sona.css",
+		"/Users/raymondarnold/Dropbox/Meteor/sona/sona.html",
+		"/Users/raymondarnold/Dropbox/Aptana/empire-meteor/empire/empire.js",
+		"/Users/raymondarnold/Dropbox/Meteor/sona/sona.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"mapCanvas",
+			"",
+			"mapCanvas",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"keypress",
+			"keycode",
+			")",
+			"login",
+			"myCanvas",
+			"setPosition",
+			"currentUser",
+			"longitude",
+			"Session.set(\"long",
+			"recorder",
+			"writeUTFBytes",
+			"outputElement",
+			"Meteor.call",
+			"key ==",
+			"console",
+			"bufferSize",
+			"analyserNode",
+			"success",
+			"interleave",
+			"writeUTFBytes",
+			"mergeBuffers",
+			"console.log",
+			"hey ho, hey hi",
+			"recordin",
+			"template",
+			"Session.set",
+			"Hamina Hey, Hamina Hi",
+			"error",
+			"error(",
+			"error()",
+			"stream gener",
+			"alert",
+			"Frame",
+			"w",
+			"key",
+			"keystroke"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"mapCanvas",
+			"hey oh hey, hey oh hi",
+			"Hey ho, Hey hi"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "timebox.js",
+					"settings":
+					{
+						"buffer_size": 425,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "timebox.html",
+					"settings":
+					{
+						"buffer_size": 186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "timebox.css",
+					"settings":
+					{
+						"buffer_size": 31,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			0.923312883436,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Getting Things Done/Metasystem"
+			],
+			[
+				"coff",
+				"Meteor/coffee-resounding/coffee-resounding.coffee"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/gtd.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 206.0,
+	"status_bar_visible": true
+}
