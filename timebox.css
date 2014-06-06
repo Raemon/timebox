@@ -1,1 +1,17 @@
 /* CSS declarations go here */
+
+.start5min {
+	color:white;
+	width:20%;
+	padding:5px;
+	border-radius:3px;
+	background-color:#22FF33;
+}
+
+.start25min {
+	color:white;
+	width:20%;
+	padding:5px;
+	border-radius:3px;
+	background-color:#FF2233;
+}
