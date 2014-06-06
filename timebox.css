@@ -1,17 +1,23 @@
 /* CSS declarations go here */
 
-.start5min {
+.start {
 	color:white;
-	width:20%;
 	padding:5px;
 	border-radius:3px;
-	background-color:#22FF33;
+	font-family: arial;
+	font-style: bold;
+	width:30%;
+	margin:2px;
 }
 
-.start25min {
-	color:white;
-	width:20%;
-	padding:5px;
-	border-radius:3px;
-	background-color:#FF2233;
+.sec3 {
+	background-color:#22AA33;
+}
+
+.min5 {
+	background-color:#AA7700;
+}
+
+.min25 {
+	background-color:#AA2233;
 }

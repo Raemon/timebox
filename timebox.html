@@ -3,13 +3,17 @@
 </head>
 
 <body>
-  {{> timebox}}
+	{{> header}}
+  	{{> timebox}}
 </body>
 
+<template name="header">
+</template>
+
 <template name="timebox">
-  <div class="start5min">Enter the Zone for 5 Minutes</div>
-  <div class="start25min">Enter the Zone for 25 Minutes</div>
+  <div class="start sec3">Enter the Zone for 3 seconds</div>
+  <div class="start min5">Enter the Zone for 5 Minutes</div>
+  <div class="start min25">Enter the Zone for 25 Minutes</div>
   <div id="timer">{{timeRemaining}}</div>
-  {{greeting}}
   <input type="button" value="Click" />
 </template>
