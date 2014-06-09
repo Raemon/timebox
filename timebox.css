@@ -3,6 +3,8 @@
 body {
     background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');
     background-attachment:fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .title {
@@ -36,13 +38,11 @@ body {
     color:black;
     width:50%;
     margin:auto;
-    padding:30px;
     border-radius: 18px;
 
 }
 
 .theZone {
-    padding:50px;
     /*background-color: rgba(255, 255, 255, .2);*/
 }
 

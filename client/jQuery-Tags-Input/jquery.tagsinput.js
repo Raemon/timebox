@@ -180,7 +180,7 @@
       defaultText:'add a tag',
       minChars:0,
       width:'300px',
-      height:'100px',
+      height:'50px',
       autocomplete: {selectFirst: false },
       'hide':true,
       'delimiter':',',
