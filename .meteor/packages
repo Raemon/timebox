@@ -4,6 +4,12 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-autopublish
 insecure
 coffeescript
+mocha-web
+autopublish
+accounts-base
+accounts-password
+accounts-ui
+jquery-ui-bootstrap
+bootstrap-3

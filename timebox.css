@@ -1,23 +1,57 @@
 /* CSS declarations go here */
 
-.start {
-	color:white;
-	padding:5px;
-	border-radius:3px;
-	font-family: arial;
-	font-style: bold;
-	width:30%;
-	margin:2px;
+body {
+    background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');
+    background-attachment:fixed;
+}
+
+.title {
+    color:white;
+    font-size:80px;
+    font-style:italic;
+    line-height: 150px;
+    text-align:center;
 }
 
 .sec3 {
-	background-color:#22AA33;
+    background-color:#22AA33;
 }
 
 .min5 {
-	background-color:#AA7700;
+    background-color:#AA7700;
 }
 
 .min25 {
-	background-color:#AA2233;
+    background-color:#AA2233;
+}
+
+.header {
+    color:white;
+}
+
+
+
+.timebox {
+    background-color: white;
+    color:black;
+    width:50%;
+    margin:auto;
+    padding:30px;
+    border-radius: 18px;
+
+}
+
+.theZone {
+    padding:50px;
+    /*background-color: rgba(255, 255, 255, .2);*/
+}
+
+#timer {
+    font-size:120px;
+    font-style:strong;
+    line-height:125px;
+}
+
+.footer {
+    background-color: rgba(255, 255, 255, .95);
 }

@@ -1,19 +1,81 @@
 <head>
   <title>timebox</title>
+  <link rel="icon" 
+        type="image/png" 
+        href="/time.png">
+
+
 </head>
 
 <body>
-	{{> header}}
-  	{{> timebox}}
+    <!-- {{>login}} -->
+    {{> header}}
+    {{> theZone}}
+
+    {{> userInfo}}
+
+        <br>
+        <br>
+
+    {{>footer}}
 </body>
 
-<template name="header">
+<template name="login">
+    <form id="login-form" action="action">
+        <input type="email" id="login-email" />
+        <input type="password" id="login-password" />
+        <input type="submit" id="login-button" value="Sign in" />
+   </form> 
 </template>
 
-<template name="timebox">
-  <div class="start sec3">Enter the Zone for 3 seconds</div>
-  <div class="start min5">Enter the Zone for 5 Minutes</div>
-  <div class="start min25">Enter the Zone for 25 Minutes</div>
-  <div id="timer">{{timeRemaining}}</div>
-  <input type="button" value="Click" />
+<template name="header">
+  <div class="row header align-center">
+    <h1 class="title">Enter the Zone</h1>
+  </div>
+</template>
+
+<template name="theZone">
+  <div class="row theZone">
+    <div class="container">
+      <br>
+      {{> currentTimebox}}
+      <br>
+      {{> timerButtons}}
+      <br>
+    </div>
+  </div>
+</template>
+
+<template name="currentTimebox">
+  <div class="row">
+    <div class="timebox text-center">
+      <div id="timer">{{timeRemaining}}</div>
+      <br>
+      <input class="text-center strong" name="tags" id="tagsField"/>
+    </div>
+  </div>
+  <script>
+    $('#tagsField').tagsInput();
+  </script>
+</template>
+
+<template name="timerButtons">
+  <div class="row text-center">
+    <div class="btn btn-large btn-primary start sec3">3 Seconds</div>
+    <div class="btn btn-large btn-success start min5">5 Minutes</div>
+    <div class="btn btn-large btn-danger start min25">25 Minutes</div>
+  </div>
+</template>
+
+<template name="userInfo">
+
+</template>
+
+
+
+<template name="footer">
+  <div class="footer container">
+    {{> mochaTestReport}}
+    {{> serverTestReport}}
+  </div>
 </template>
