@@ -8,8 +8,9 @@
 </head>
 
 <body>
-    <!-- {{>login}} -->
     {{> header}}
+    {{> login}}
+
     {{> theZone}}
 
     {{> userInfo}}
@@ -20,17 +21,9 @@
     {{>footer}}
 </body>
 
-<template name="login">
-    <form id="login-form" action="action">
-        <input type="email" id="login-email" />
-        <input type="password" id="login-password" />
-        <input type="submit" id="login-button" value="Sign in" />
-   </form> 
-</template>
-
 <template name="header">
-  <div class="row header align-center">
-    <h1 class="title">Enter the Zone</h1>
+  <div class="row header text-center">
+    <h1 class="title header">Enter the Zone</h1>
   </div>
 </template>
 
@@ -49,13 +42,14 @@
 <template name="currentTimebox">
   <div class="row">
     <div class="timebox text-center">
+      <br>
       <div id="timer">{{timeRemaining}}</div>
       <br>
-      <input class="text-center strong" name="tags" id="tagsField"/>
+      <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
     </div>
   </div>
   <script>
-    $('#tagsField').tagsInput();
+    $("#tagsField").tagsInput();
   </script>
 </template>
 
@@ -68,14 +62,27 @@
 </template>
 
 <template name="userInfo">
-
+  <div class="container userInfo">
+    {{#each timeboxes}}
+      {{> timeboxData}}
+    {{/each}}
+  </div>
 </template>
 
-
+<template name="timeboxData">
+  <div id="timeboxData{{this._id}}">
+    User: {{user}}<br>
+    {{create_date}}<br>
+    {{create_time}}<br>
+    {{tags}}<br>
+  </div>
+</template>
 
 <template name="footer">
-  <div class="footer container">
+  <div class="row footer">
+    <div class="container">
     {{> mochaTestReport}}
     {{> serverTestReport}}
   </div>
+</div>
 </template>

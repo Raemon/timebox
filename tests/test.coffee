@@ -5,59 +5,87 @@ describe "Collections", ->
         timeboxID = startTimebox 5*60
         timebox = Timeboxes.findOne(timeboxID)
         chai.assert.equal timebox.duration, 5*60
-        Timeboxes.remove(timeboxID)
+        testReset(timeboxID)
       it "has startTime", ->
         date = new Date()
         timeboxID = startTimebox 5*60
         timebox = Timeboxes.findOne(timeboxID)
         chai.assert.equal timebox.startTime.getSeconds, date.getSeconds
-        Timeboxes.remove(timeboxID)
+        testReset(timeboxID)
       it "timebox is incomplete", ->
         timeboxID = startTimebox 5*60
         timebox = Timeboxes.findOne(timeboxID)
         chai.assert.equal timebox.complete, false
-        Timeboxes.remove(timeboxID)
+        testReset(timeboxID)
       it "can read currentTimebox", ->
         timeboxID = startTimebox 5*60
         currentTimeboxID = Session.get("currentTimeboxID")
         chai.assert.equal timeboxID, currentTimeboxID
-        Timeboxes.remove(timeboxID)
+        testReset(timeboxID)
+      it "appears in Timebox Log", ->
+        timeboxID = startTimebox 5*60
+        timeboxDiv = document.getElementById("timeboxData"+timeboxID)
+        chai.expect(timeboxDiv).to.be.ok
+        testReset(timeboxID)
+      it "assigns the current user or creates a new one", ->
+        timeboxID = startTimebox 5*60
+        timebox = Timeboxes.findOne(timeboxID)
+        console.log(Session.get("currentUserID"))
+        chai.assert.equal timebox.userID, Session.get("currentUserID")
+        chai.expect(timebox.userID).to.be.ok
+        chai.expect(Session.get("currentUserID")).to.be.ok
+        testReset(timeboxID)
 
     describe "On completeTimebox", ->
-      it 'assigns the current user or creates a new one', ->
-        userID = Session.get("currentUserID")
-        if userID == undefined
-          userID = createUser("temporary")
-        startTimebox 5*60
-        timeboxID = completeTimebox()
-        timebox = Timeboxes.findOne(timeboxID)
-        chai.assert.equal timebox.userID, Session.get("currentUserID")
-        Timeboxes.remove(timeboxID)
 
       it "reads tags", ->
         startTimebox 5*60
-        $('#tagsField').addTag('foo')
-        $('#tagsField').addTag('bar')
-        $('#tagsField').addTag('bazz')
+        $("#tagsField").addTag("foo")
+        $("#tagsField").addTag("bar")
+        $("#tagsField").addTag("bazz")
         timeboxID = completeTimebox()
         timebox = Timeboxes.findOne(timeboxID)
-        chai.expect(timebox.tags).to.deep.equal ['foo', 'bar', 'bazz']
-        $('#tagsField').removeTag('foo')
-        $('#tagsField').removeTag('bar')
-        $('#tagsField').removeTag('bazz')
-        Timeboxes.remove(timeboxID)
+        chai.expect(timebox.tags).to.deep.equal ["uncategorized", "foo", "bar", "bazz"]
+        $("#tagsField").removeTag("foo")
+        $("#tagsField").removeTag("bar")
+        $("#tagsField").removeTag("bazz")
+        testReset(timeboxID)
 
 
   describe "Users", ->
     describe "on createUser", ->
-      it "o", ->
-        userID = Users.insert({username: 'foo'})
+      it "if username is 'TemporaryUser', create a TempUser", ->
+        userID = createUser('TemporaryUser')
         user = Users.findOne(userID)
-        chai.assert.equal user.username, 'foo'
+        chai.expect(user.temp).to.equal true
+        chai.expect(user.username).to.contain('TemporaryUser')
+        Users.remove(userID)
+
+      it "if username exists already, give error", ->
+        userID = createUser('test')
+        userID2 = createUser('test')
+        chai.expect(userID2).to.equal undefined
+        chai.expect(Session.get('loginError')).to.equal 'This username is taken'
+        Users.remove(userID)
+        Users.remove(userID2)
+        Session.set("loginError", undefined)
+    describe "on login", ->
+      it "sets currentUserID to the _id matching the username you entered", ->
+        username = document.getElementById("loginField").innerHTML
+        userID = login(username)
+        chai.expect(userID).to.equal Session.get("currentUserID")
+
 
 describe "UI", ->
   describe "Elements", ->
     it "tagsField should exist", ->
-      tagsField = document.getElementById('tagsField')
-      console.log(tagsField)
+      tagsField = document.getElementById("tagsField")
       chai.expect(tagsField).to.be.ok
+      
+    it "username should be displayed", ->
+      username = document.getElementById("username")
+      currentUser = Users.findOne(Session.get("currentUserID"))
+      chai.expect(username).to.be.ok
+      chai.assert.equal username.innerHTML, currentUser.username
+
+
