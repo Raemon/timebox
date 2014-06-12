@@ -8,18 +8,29 @@
 </head>
 
 <body>
-    {{> header}}
-    {{> login}}
+    <!-- {{> starfield}} -->
+    
+    <div class="container">
+      {{> header}}
+      <div class="row">
+        {{> theZone}}
+        {{> userInfo}}
+      </div>
+    </div>
 
-    {{> theZone}}
-
-    {{> userInfo}}
+    {{> oldTimeboxes}}
 
         <br>
         <br>
 
     {{>footer}}
 </body>
+
+<template name="starfield">
+  <div class="starfield">
+    <div class="star" id="star1"></div>
+  </div>
+</template>
 
 <template name="header">
   <div class="row header text-center">
@@ -28,14 +39,17 @@
 </template>
 
 <template name="theZone">
-  <div class="row theZone">
-    <div class="container">
-      <br>
+  <div class="theZone col-md-5">
       {{> currentTimebox}}
       <br>
       {{> timerButtons}}
       <br>
-    </div>
+  </div>
+</template>
+
+<template name="userInfo">
+  <div class="userInfo col-md-5">
+      {{> login}}
   </div>
 </template>
 
@@ -61,7 +75,7 @@
   </div>
 </template>
 
-<template name="userInfo">
+<template name="oldTimeboxes">
   <div class="container userInfo">
     {{#each timeboxes}}
       {{> timeboxData}}

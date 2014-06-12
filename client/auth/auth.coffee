@@ -25,34 +25,54 @@ isValidPassword = (password) ->
   else
     true
 
-areValidPasswords = (password, confirm) ->
-  if !isValidPassword
+areValidPasswords = (password, passwordConfirm) ->
+  if !isValidPassword(password)
     return false
-  if password != confirm
+  console.log(password)
+  console.log(confirm)
+  console.log password == passwordConfirm
+  if password != passwordConfirm
     Session.set("alert", "Your passwords do not match")
     return false
-  true
+  else 
+    true
+
 
 Template.alert.helpers {
   alert: () ->
     Session.get("alert")
 }
 
+
+Session.set("loginWindow", "signingIn")
 Template.login.helpers {
-  showForgotPassword: () ->
-    Session.get("showForgotPassword")
+  forgottenPassword: () ->
+    Session.equals("loginWindow", "forgottenPassword")
+  signingIn: () ->
+    Session.equals("loginWindow", "signingIn")
+  signingUp: () ->
+    Session.equals("loginWindow", "signingUp")
+}
+
+Template.login.events {
+  "click .signIn": () ->
+    Session.set("loginWindow", "signingIn")
+  "click .forgotPassword": () ->
+    Session.set("loginWindow", "forgottenPassword")
+  "click .signUp": () ->
+    Session.set("loginWindow", "signingUp")
 }
 
 Template.signUp.events {
   "submit #signUpForm": (e, t) ->
     e.preventDefault()
-
     signUpForm = $(e.currentTarget)
     email = trimInput(signUpForm.find('#signUpEmail').val().toLowerCase())
     password = signUpForm.find('#signUpPassword').val()
     passwordConfirm = signUpForm.find('#signUpPasswordConfirm').val()
 
-    if isNotEmpty(email) && isNotEmpty(password) && isEmail(email) && isValidPassword(password)
+    if isNotEmpty(email) && isNotEmpty(password) && isEmail(email) && isValidPassword(password) && areValidPasswords(password, passwordConfirm)
+      console.log
       Accounts.createUser({email: email, password: password}, (err) ->
         if err
           if err.message == "Email already exists. [403]"
@@ -62,18 +82,17 @@ Template.signUp.events {
         else 
           Session.set("alert", "Welcome!")
       )
-
   }
 
 Template.signIn.events {
-  "submit #signInForm": (e,t) ->
+  "click #signInForm": (e,t) ->
     e.preventDefault()
 
     signInForm = $(e.currentTarget)
     email = trimInput(signInForm.find(".email").val().toLowerCase())
     password = signInForm.find(".password").val()
 
-    if isNotEmpty(email) && isEmail(email) && isNotEmpty(password) 
+    if isNotEmpty(email) && isEmail(email) && isNotEmpty(password)
       Meteor.loginWithPassword(email, password, (err) ->
         if (err)
           Session.set("alert", "Sorry! This email/password combination is invalid.")

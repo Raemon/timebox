@@ -7,6 +7,7 @@
 }
 
 body {
+    background-color: black;
     /*background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');*/
     background-attachment:fixed;
     overflow-y: scroll;
@@ -14,7 +15,7 @@ body {
 }
 
 .title {
-    color:black;
+    color:white;
     font-size:80px;
     font-style:italic;
     line-height: 150px;
@@ -33,25 +34,21 @@ body {
     background-color:#AA2233;
 }
 
-.header {
-    color:black;
-}
-
 .userInfo {
-    background-color: white;
+    /*background-color: rgba(255, 255, 255, 1);*/
+    color:white;
+    margin:10px;
+    height:400px;
 }
 
 .timebox {
-    background-color: white;
-    color:black;
-    width:50%;
-    margin:auto;
-    border-radius: 3px;
-
-}
+/*    background-color: rgba(255, 255, 255, .7);
+*/}
 
 .theZone {
-    /*background-color: rgba(255, 255, 255, .2);*/
+    background-color: rgba(255, 255, 255, 1);
+    margin:10px;
+    height:400px;
 }
 
 #timer {
@@ -60,6 +57,25 @@ body {
     line-height:125px;
     font-family:impact;
 }
+
+.starfield {
+    position:absolute;
+    z-index: -1;
+    background-color: black;
+    width:100%;
+    height:100%;
+}
+
+.star {
+    width:10px;
+    height:10px;
+    border-radius: 5px;
+    position:absolute;
+    top:50px;
+    left:50px;
+    background-color:white;
+}
+
 
 .footer {
     background-color: rgba(255, 255, 255, .95);

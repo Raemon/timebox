@@ -4,12 +4,48 @@
 		"selected_items":
 		[
 			[
-				"get",
-				"getElementById"
+				"forgot",
+				"forgottenPassword"
+			],
+			[
+				"border",
+				"border-radius"
+			],
+			[
+				"current",
+				"currentUserID"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"compl",
+				"completeTimebox"
+			],
+			[
+				"bord",
+				"border-radius"
 			],
 			[
 				"r",
-				"reverseString"
+				"rgba()"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"timer",
+				"timer"
+			],
+			[
+				"curr",
+				"currentUser"
+			],
+			[
+				"get",
+				"getElementById"
 			],
 			[
 				"font-",
@@ -28,10 +64,10 @@
 	"buffers":
 	[
 		{
-			"file": "timebox.js",
+			"file": "timebox.coffee",
 			"settings":
 			{
-				"buffer_size": 425,
+				"buffer_size": 4726,
 				"line_ending": "Unix"
 			}
 		},
@@ -39,7 +75,42 @@
 			"file": "timebox.html",
 			"settings":
 			{
-				"buffer_size": 186,
+				"buffer_size": 2004,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/auth/auth.html",
+			"settings":
+			{
+				"buffer_size": 3646,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/auth/auth.coffee",
+			"settings":
+			{
+				"buffer_size": 3853,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "server/email.coffee",
+			"settings":
+			{
+				"buffer_size": 114,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "describe \"Collections\", ->\n  describe \"Timeboxes\", ->\n    describe \"On startTimebox\", ->\n      it \"has duration\", ->\n        timeboxID = startTimebox 5*60\n        timebox = Timeboxes.findOne(timeboxID)\n        chai.assert.equal timebox.duration, 5*60\n        testReset(timeboxID)\n      it \"has startTime\", ->\n        date = new Date()\n        timeboxID = startTimebox 5*60\n        timebox = Timeboxes.findOne(timeboxID)\n        chai.assert.equal timebox.startTime.getSeconds, date.getSeconds\n        testReset(timeboxID)\n      it \"timebox is incomplete\", ->\n        timeboxID = startTimebox 5*60\n        timebox = Timeboxes.findOne(timeboxID)\n        chai.assert.equal timebox.complete, false\n        testReset(timeboxID)\n      it \"can read currentTimebox\", ->\n        timeboxID = startTimebox 5*60\n        currentTimeboxID = Session.get(\"currentTimeboxID\")\n        chai.assert.equal timeboxID, currentTimeboxID\n        testReset(timeboxID)\n      it \"appears in Timebox Log\", ->\n        timeboxID = startTimebox 5*60\n        timeboxDiv = document.getElementById(\"timeboxData\"+timeboxID)\n        chai.expect(timeboxDiv).to.be.ok\n        testReset(timeboxID)\n      it \"assigns the current user or creates a new one\", ->\n        timeboxID = startTimebox 5*60\n        timebox = Timeboxes.findOne(timeboxID)\n        console.log(Session.get(\"currentUserID\"))\n        chai.assert.equal timebox.userID, Session.get(\"currentUserID\")\n        chai.expect(timebox.userID).to.be.ok\n        chai.expect(Session.get(\"currentUserID\")).to.be.ok\n        testReset(timeboxID)\n\n    describe \"On completeTimebox\", ->\n\n      it \"reads tags\", ->\n        startTimebox 5*60\n        $(\"#tagsField\").addTag(\"foo\")\n        $(\"#tagsField\").addTag(\"bar\")\n        $(\"#tagsField\").addTag(\"bazz\")\n        timeboxID = completeTimebox()\n        timebox = Timeboxes.findOne(timeboxID)\n        chai.expect(timebox.tags).to.deep.equal [\"uncategorized\", \"foo\", \"bar\", \"bazz\"]\n        $(\"#tagsField\").removeTag(\"foo\")\n        $(\"#tagsField\").removeTag(\"bar\")\n        $(\"#tagsField\").removeTag(\"bazz\")\n        testReset(timeboxID)\n\n\n  describe \"Users\", ->\n    describe \"on createUser\", ->\n      it \"if username is 'TemporaryUser', create a TempUser\", ->\n        userID = createUser('TemporaryUser')\n        user = Users.findOne(userID)\n        chai.expect(user.temp).to.equal true\n        chai.expect(user.username).to.contain('TemporaryUser')\n        Users.remove(userID)\n\n      it \"if username exists already, give error\", ->\n        userID = createUser('test')\n        userID2 = createUser('test')\n        chai.expect(userID2).to.equal undefined\n        chai.expect(Session.get('loginError')).to.equal 'This username is taken'\n        Users.remove(userID)\n        Users.remove(userID2)\n        Session.set(\"loginError\", undefined)\n        \n    describe \"on login\", ->\n      it \"sets currentUserID to the _id matching the username you entered\", ->\n        username = document.getElementById(\"loginField\").innerHTML\n        userID = login(username)\n        chai.expect(userID).to.equal Session.get(\"currentUserID\")\n\n\ndescribe \"UI\", ->\n  describe \"Elements\", ->\n    it \"tagsField should exist\", ->\n      tagsField = document.getElementById(\"tagsField\")\n      chai.expect(tagsField).to.be.ok\n      \n    it \"username should be displayed\", ->\n      username = document.getElementById(\"username\")\n      currentUser = Users.findOne(Session.get(\"currentUserID\"))\n      chai.expect(username).to.be.ok\n      chai.assert.equal username.innerHTML, currentUser.username\n\n\n",
+			"file": "tests/test.coffee",
+			"file_size": 3511,
+			"file_write_time": 1402441000000000,
+			"settings":
+			{
+				"buffer_size": 3520,
 				"line_ending": "Unix"
 			}
 		},
@@ -47,7 +118,23 @@
 			"file": "timebox.css",
 			"settings":
 			{
-				"buffer_size": 31,
+				"buffer_size": 1220,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/raymondarnold/Dropbox/SublimeDocs/Gratitude Journal",
+			"settings":
+			{
+				"buffer_size": 5521,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "packages/bootstrap-3/bootstrap-3/css/bootstrap-theme.css",
+			"settings":
+			{
+				"buffer_size": 14984,
 				"line_ending": "Unix"
 			}
 		}
@@ -84,9 +171,31 @@
 	},
 	"file_history":
 	[
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Self Improvement/Gratitude Journal",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting_2014",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/auth/auth.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mongoose test/node_modules/mongoose/lib/drivers/node-mongodb-native/binary.js",
+		"/Users/raymondarnold/.meteorite/packages/bootstrap-3/mangasocial/meteor-bootstrap-3/63dd38968828bb8963636df93e9a1c45e2dfe67e/bootstrap-override.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/README.md",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/jquery.tagsinput.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/jquery.tagsinput.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Gratitude Journal",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Metasystem",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/tutorial_bootstrap/index.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/css/bootstrap.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/lifehack/tests/lifehackTests.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/client/loginHTML.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/timebox.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/public/chord2.mp3",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/test.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/admin-test/admin-test.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/admin-test/admin-test.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/resounding.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/empire_short/empire.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/test.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/test.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Self Improvement/Gratitude Journal",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/NextActions",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown Reprise",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Stardust",
@@ -94,7 +203,6 @@
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/login_client.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/client/audio.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/tagTest/tagTest.js",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/resounding/resounding.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/coffee-resounding/coffee-resounding.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mochaTest/test/taskTest.coffee",
@@ -195,6 +303,56 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"currentUser",
+			"small",
+			"btn-xs",
+			"btn-xs btn-xs",
+			"btn-submit",
+			"btn-default",
+			"extra",
+			"btn-default",
+			"btn-submit",
+			"navbar,",
+			"navbar",
+			"login",
+			"navbar",
+			"Template.login",
+			"currentTimeboxID",
+			"loginError",
+			"login",
+			"console",
+			"currentUserID",
+			"console",
+			"currentUser\"",
+			"createUser",
+			"console",
+			"Timeboxes.remove",
+			"'",
+			"startTimebox",
+			"footer",
+			"margin",
+			"padding",
+			"width",
+			"float",
+			"height",
+			"border",
+			"float",
+			"timer",
+			"Session.set",
+			"root.countdown",
+			"publish",
+			"Timeboxes",
+			"publish",
+			"countdown",
+			"root",
+			"gradient",
+			"banner",
+			"header",
+			"banner-header",
+			"startTimebox",
+			"title",
+			"btn-success",
+			"btn",
 			"keypress",
 			"keycode",
 			")",
@@ -238,6 +396,19 @@
 		"regex": true,
 		"replace_history":
 		[
+			"",
+			"btn-xs",
+			"btn-default btn-xs",
+			"btn-submit btn-xs",
+			"btn-xs",
+			"btn-default small",
+			"btn-default",
+			"btn-small",
+			"alert",
+			"testReset",
+			"\"",
+			"countdown",
+			"root.countdown",
 			"mapCanvas",
 			"hey oh hey, hey oh hi",
 			"Hey ho, Hey hi"
@@ -251,33 +422,33 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "timebox.js",
+					"file": "timebox.coffee",
 					"settings":
 					{
-						"buffer_size": 425,
+						"buffer_size": 4726,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3318,
+								3318
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1885.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -287,20 +458,104 @@
 					"file": "timebox.html",
 					"settings":
 					{
-						"buffer_size": 186,
+						"buffer_size": 2004,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								896,
+								910
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 791.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "client/auth/auth.html",
+					"settings":
+					{
+						"buffer_size": 3646,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2117,
+								2117
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 737.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "client/auth/auth.coffee",
+					"settings":
+					{
+						"buffer_size": 3853,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2268,
+								1472
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 224.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "server/email.coffee",
+					"settings":
+					{
+						"buffer_size": 114,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								43,
+								23
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -309,24 +564,109 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "timebox.css",
+					"buffer": 5,
+					"file": "tests/test.coffee",
 					"settings":
 					{
-						"buffer_size": 31,
+						"buffer_size": 3520,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2801,
+								2801
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage"
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 850.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "timebox.css",
+					"settings":
+					{
+						"buffer_size": 1220,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								270,
+								270
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Users/raymondarnold/Dropbox/SublimeDocs/Gratitude Journal",
+					"settings":
+					{
+						"buffer_size": 5521,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								135,
+								135
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "packages/bootstrap-3/bootstrap-3/css/bootstrap-theme.css",
+					"settings":
+					{
+						"buffer_size": 14984,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								170,
+								170
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -334,11 +674,6 @@
 					},
 					"type": "text"
 				}
-			]
-		},
-		{
-			"sheets":
-			[
 			]
 		}
 	],
@@ -359,12 +694,6 @@
 				0,
 				1,
 				1
-			],
-			[
-				0,
-				1,
-				1,
-				2
 			]
 		],
 		"cols":
@@ -375,7 +704,6 @@
 		"rows":
 		[
 			0.0,
-			0.923312883436,
 			1.0
 		]
 	},
@@ -390,6 +718,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"navbar",
+				"ProgramTesting/mongoose test/node_modules/mongoose/lib/drivers/node-mongodb-native/binary.js"
+			],
 			[
 				"",
 				"Getting Things Done/Metasystem"
@@ -413,10 +745,10 @@
 		],
 		"width": 380.0
 	},
-	"show_minimap": true,
+	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 206.0,
+	"side_bar_width": 250.0,
 	"status_bar_visible": true
 }

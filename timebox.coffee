@@ -92,6 +92,35 @@ if root.Meteor.isClient
     , 1000
 
 
+  # getPosition = (id, style) ->
+  #   element = document.getElementById(id)
+  #   if element.getAttribute("style", style)
+  #     value = parseInt(element.getAttribute("style", style).split(":")[1].split("px")[0])
+
+  # setPosition = (id, style, value) ->
+  #   element = document.getElementById(id)
+  #   if element.getAttribute("style", style)
+  #     set = style + ":" + value.toString() + "px"
+  #     star1.setAttribute("style",set);
+
+
+  
+  # stars = () ->
+  #   star1 = document.getElementById('star1')
+  #   if star1
+  #       transform()
+  #   if star1.getAttribute("style", "top")
+  #     yaxis = getPosition("star1", "top")
+  #     setPosition("star1", "top", yaxis+1)
+  #     console.log(yaxis)
+  #   else
+  #     star1.setAttribute("style", "top:0px")
+
+  # starMovement = setInterval () -> 
+  #     stars()
+  #   , 50
+
+
   Handlebars.registerHelper "timeRemaining", () ->
     Session.get("timeRemaining")
 
