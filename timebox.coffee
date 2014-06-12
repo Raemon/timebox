@@ -9,6 +9,7 @@ if root.Meteor.isClient
 
   countdown = 0
 
+
   createUser = (username) ->
 
     # Create a temporary user if appropriate
@@ -41,11 +42,15 @@ if root.Meteor.isClient
     minutes + ":" + seconds
 
   startTimebox = (duration) ->
+    for timebox in Timeboxes.find({userID: Meteor.userId()}).fetch()
+      console.log timebox
+      if !timebox.complete
+        Timeboxes.remove(timebox._id)
     countdown = duration
     if Users.findOne(Session.get("currentUserID")) == undefined
       createUser('TemporaryUser')
     timeboxID = Timeboxes.insert {
-      userID: Session.get("currentUserID"),
+      userID: Meteor.userId(),
       duration: duration,
       startTime: new Date(),
       endTime: undefined,
@@ -79,10 +84,10 @@ if root.Meteor.isClient
         Session.set("timeRemaining", secondFormat(countdown))
         document.title = secondFormat(countdown)
       if countdown == 0
-        completeTimebox(Session.get("currentTimeboxID"))
+        completeTimebox(Session.get("currentTimeboxID")) 
         audio = new Audio "cChord.mp3"
         audio.play()
-        # alert("You have left the zone")
+        alert("You have left the zone")
       countdown
 
 
@@ -90,6 +95,9 @@ if root.Meteor.isClient
   setInterval () -> 
       timer()
     , 1000
+
+  countdown = 0
+  Session.set("timeRemaining", secondFormat(countdown))
 
 
   # getPosition = (id, style) ->
@@ -133,6 +141,9 @@ if root.Meteor.isClient
     else
       undefined
 
+  Handlebars.registerHelper "userTimeboxes", () ->
+    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: 10}).fetch()
+
   Handlebars.registerHelper "date", (date) ->
     date.getDate()
 
@@ -155,13 +166,32 @@ if root.Meteor.isClient
   root.Template.login.loginError = () ->
     return Session.get("loginError")
 
-  root.Template.userInfo.timeboxes = () ->
-    Timeboxes.find({}, {sort: {startTime: -1}, limit: 10}).fetch()
+
 
   root.Template.timeboxData.create_date = () ->
-    this.startTime.toDateString()
+    timeboxDateStr = this.startTime.toDateString()
+    todayDate = new Date()
+    if timeboxDateStr == todayDate.toDateString()
+      return "Today"
+
+    return timeboxDateStr
+
   root.Template.timeboxData.create_time = () ->
     this.startTime.toLocaleTimeString()
+  root.Template.timeboxData.duration = () ->
+    secondFormat(this.duration)
+  root.Template.timeboxData.complete = () ->
+    if this.complete
+      return "Completed"
+    else
+      return "Incomplete"
+
+
+
+  root.Meteor.startup () ->
+    console.log(Meteor.userId())
+    console.log(Timeboxes.find({}).fetch())
+
 
 if root.Meteor.isServer
   if exports? then root = exports

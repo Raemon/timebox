@@ -1,6 +1,8 @@
 /* CSS declarations go here */
 
-
+a {
+    color:gold;
+}
 * {
   padding: 0;
   margin: 0;
@@ -8,7 +10,7 @@
 
 body {
     background-color: black;
-    /*background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');*/
+    background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');
     background-attachment:fixed;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -35,20 +37,33 @@ body {
 }
 
 .userInfo {
-    /*background-color: rgba(255, 255, 255, 1);*/
+    background-color: rgba(255, 255, 255, .1);
     color:white;
-    margin:10px;
-    height:400px;
+    padding:10px;
+    text-align: center;
+    min-height:300px;
+    /*margin:10px;*/
 }
 
 .timebox {
-/*    background-color: rgba(255, 255, 255, .7);
-*/}
+    background-color: rgba(255, 230, 200, .2);
+    width:340px;
+    margin-top:15px;
+    padding:5px;
+    float:none;
+}
+
+.timeboxCompleted {
+    color:blue;
+    font-style:"bold";
+}
+.timeboxIncomplete {
+    color:red;
+}
 
 .theZone {
-    background-color: rgba(255, 255, 255, 1);
-    margin:10px;
-    height:400px;
+    /*background-color: rgba(255, 220, 240, .5);*/
+    /*margin:10px;*/
 }
 
 #timer {
@@ -56,6 +71,7 @@ body {
     font-style:strong;
     line-height:125px;
     font-family:impact;
+    color:white;
 }
 
 .starfield {

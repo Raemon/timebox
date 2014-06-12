@@ -19,7 +19,7 @@ isEmail = (value) ->
     false;
 
 isValidPassword = (password) ->
-  if password.length <= 6
+  if password.length < 6
     Session.set("alert", "Your password should be at least 6 letters long")
     false
   else
@@ -129,6 +129,6 @@ Template.forgotPassword.events {
         )
 
   "click #returnToSignIn": (e,t) ->
-    Session.set("showForgotPassword", undefined)
+    Session.set("loginWindow", "signingIn")
 
 }

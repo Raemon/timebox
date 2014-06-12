@@ -30,10 +30,9 @@ describe "Collections", ->
       it "assigns the current user or creates a new one", ->
         timeboxID = startTimebox 5*60
         timebox = Timeboxes.findOne(timeboxID)
-        console.log(Session.get("currentUserID"))
-        chai.assert.equal timebox.userID, Session.get("currentUserID")
+        chai.assert.equal timebox.userID, Meteor.userId()
         chai.expect(timebox.userID).to.be.ok
-        chai.expect(Session.get("currentUserID")).to.be.ok
+        chai.expect(Meteor.userId).to.be.ok
         testReset(timeboxID)
 
     describe "On completeTimebox", ->

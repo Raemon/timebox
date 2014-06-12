@@ -16,21 +16,16 @@
         {{> theZone}}
         {{> userInfo}}
       </div>
+
     </div>
 
-    {{> oldTimeboxes}}
+
 
         <br>
         <br>
 
     {{>footer}}
 </body>
-
-<template name="starfield">
-  <div class="starfield">
-    <div class="star" id="star1"></div>
-  </div>
-</template>
 
 <template name="header">
   <div class="row header text-center">
@@ -39,7 +34,7 @@
 </template>
 
 <template name="theZone">
-  <div class="theZone col-md-5">
+  <div class="theZone col-md-6">
       {{> currentTimebox}}
       <br>
       {{> timerButtons}}
@@ -49,13 +44,20 @@
 
 <template name="userInfo">
   <div class="userInfo col-md-5">
+    <div class="text-center">
+      <br>
       {{> login}}
+      <br>
+      {{#if userAddress}}
+        {{> oldTimeboxes}}
+      {{/if}}
+    </div>
   </div>
 </template>
 
 <template name="currentTimebox">
   <div class="row">
-    <div class="timebox text-center">
+    <div class="text-center">
       <br>
       <div id="timer">{{timeRemaining}}</div>
       <br>
@@ -69,25 +71,27 @@
 
 <template name="timerButtons">
   <div class="row text-center">
-    <div class="btn btn-large btn-primary start sec3">3 Seconds</div>
+    <!-- <div class="btn btn-large btn-primary start sec3">3 Seconds</div> -->
     <div class="btn btn-large btn-success start min5">5 Minutes</div>
     <div class="btn btn-large btn-danger start min25">25 Minutes</div>
   </div>
 </template>
 
 <template name="oldTimeboxes">
-  <div class="container userInfo">
-    {{#each timeboxes}}
+  <div class="container text-center">
+    {{#each userTimeboxes}}
       {{> timeboxData}}
     {{/each}}
   </div>
 </template>
 
 <template name="timeboxData">
-  <div id="timeboxData{{this._id}}">
-    User: {{user}}<br>
-    {{create_date}}<br>
-    {{create_time}}<br>
+  <div id="timeboxData{{this._id}} text-center" class="timebox">
+    {{create_date}} (<span class="timebox{{complete}}">{{complete}}</span>)
+    <br>
+    Begun at {{create_time}}<br>
+    Duration: {{duration}}
+    <br>
     {{tags}}<br>
   </div>
 </template>
