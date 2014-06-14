@@ -51,6 +51,8 @@ describe "Collections", ->
         testReset(timeboxID)
 
 
+
+
   describe "Users", ->
     describe "on createUser", ->
       it "if username is 'TemporaryUser', create a TempUser", ->
@@ -86,5 +88,9 @@ describe "UI", ->
       currentUser = Users.findOne(Session.get("currentUserID"))
       chai.expect(username).to.be.ok
       chai.assert.equal username.innerHTML, currentUser.username
+
+    it "timer exists", ->
+      timer = document.getElementById("timer")
+
 
 

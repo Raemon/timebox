@@ -4,50 +4,61 @@
         type="image/png" 
         href="/time.png">
 
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
     <!-- {{> starfield}} -->
     
-    <div class="container">
+    <div class="container text-center">
       {{> header}}
-      <div class="row">
-        {{> theZone}}
-        {{> userInfo}}
-      </div>
+      {{> currentTimebox}}
+      {{> userInfo}}
 
     </div>
-
-
-
-        <br>
-        <br>
-
     {{>footer}}
 </body>
 
 <template name="header">
-  <div class="row header text-center">
-    <h1 class="title header">Enter the Zone</h1>
+  <hr>
+  <div class="text-center">
+    <h1 class="title header">Get in the Zone</h1>
   </div>
+  <hr>
 </template>
 
-<template name="theZone">
-  <div class="theZone col-md-6">
-      {{> currentTimebox}}
-      <br>
+<template name="currentTimebox">
+  <div class="currentTimebox">
+
+      <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
+      
+      <div class="setTimer {{settingTimer}}">
+        <select class="timerSelect" id="minutesSelect" value="25">
+          {{#each range 59}}
+            <option class="timerSelect" value="{{this}}">{{zfill this 2}}</option>
+          {{/each}}
+        </select>
+        :
+        <select class="timerSelect" id="secondsSelect" value="0">
+          {{#each range 59}}
+            <option value="{{this}}">{{zfill this 2}}</option>
+          {{/each}}
+        </select>
+      </div>
+
       {{> timerButtons}}
-      <br>
+      <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
   </div>
+  <script>
+    $("#tagsField").tagsInput();
+  </script>
 </template>
+
 
 <template name="userInfo">
-  <div class="userInfo col-md-5">
+  <div class="userInfo">
     <div class="text-center">
-      <br>
-      {{> login}}
-      <br>
+      <div class="loginBox">{{> login}}</div>
       {{#if userAddress}}
         {{> oldTimeboxes}}
       {{/if}}
@@ -55,30 +66,16 @@
   </div>
 </template>
 
-<template name="currentTimebox">
-  <div class="row">
-    <div class="text-center">
-      <br>
-      <div id="timer">{{timeRemaining}}</div>
-      <br>
-      <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
-    </div>
-  </div>
-  <script>
-    $("#tagsField").tagsInput();
-  </script>
-</template>
-
 <template name="timerButtons">
   <div class="row text-center">
-    <!-- <div class="btn btn-large btn-primary start sec3">3 Seconds</div> -->
-    <div class="btn btn-large btn-success start min5">5 Minutes</div>
-    <div class="btn btn-large btn-danger start min25">25 Minutes</div>
+    <div class="btn btn-large timer-set {{settingTimer}}">Set Time</div>
+    <div class="btn btn-large timer-start ">Start</div>
+    <div class="btn btn-large btn-danger timer-stop">Stop</div>
   </div>
 </template>
 
 <template name="oldTimeboxes">
-  <div class="container text-center">
+  <div class="text-center">
     {{#each userTimeboxes}}
       {{> timeboxData}}
     {{/each}}
@@ -86,13 +83,22 @@
 </template>
 
 <template name="timeboxData">
-  <div id="timeboxData{{this._id}} text-center" class="timebox">
-    {{create_date}} (<span class="timebox{{complete}}">{{complete}}</span>)
-    <br>
-    Begun at {{create_time}}<br>
-    Duration: {{duration}}
-    <br>
-    {{tags}}<br>
+  <div id="timeboxData{{this._id}}" class="timebox">
+      <div class="timeboxData_right">
+        <div class="btn repeatTimebox">
+          Repeat
+        </div>
+      </div>
+      <div class="timeboxData_left">
+        <div class="timeboxDuration">
+          {{duration}} - 
+          <span class="timebox{{complete}}">{{complete}}</span>
+        </div>
+        {{create_date}} - {{create_time}}<br>
+
+        Tags: {{tags}}<br>
+    </div>
+
   </div>
 </template>
 
@@ -103,4 +109,17 @@
     {{> serverTestReport}}
   </div>
 </div>
+</template>
+
+<template name="starfield">
+  <div id="starfield">
+  </div>
+  <script src="starfield.js"></script>
+  <script>
+
+  var container = document.getElementById('starfield');
+  var starfield = new Starfield();
+  starfield.initialise(container);
+  starfield.start();
+  </script>
 </template>
