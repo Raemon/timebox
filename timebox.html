@@ -10,7 +10,7 @@
 <body>
     <!-- {{> starfield}} -->
     
-    <div class="container text-center">
+    <div class="text-center">
       {{> header}}
       {{> currentTimebox}}
       {{> userInfo}}
@@ -20,18 +20,16 @@
 </body>
 
 <template name="header">
-  <hr>
   <div class="text-center">
     <h1 class="title header">Get in the Zone</h1>
   </div>
-  <hr>
 </template>
 
 <template name="currentTimebox">
   <div class="currentTimebox">
 
       <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
-      
+
       <div class="setTimer {{settingTimer}}">
         <select class="timerSelect" id="minutesSelect" value="25">
           {{#each range 59}}
@@ -54,7 +52,6 @@
   </script>
 </template>
 
-
 <template name="userInfo">
   <div class="userInfo">
     <div class="text-center">
@@ -69,7 +66,7 @@
 <template name="timerButtons">
   <div class="row text-center">
     <div class="btn btn-large timer-set {{settingTimer}}">Set Time</div>
-    <div class="btn btn-large timer-start ">Start</div>
+    <div class="btn btn-large btn-primary timer-start ">Start</div>
     <div class="btn btn-large btn-danger timer-stop">Stop</div>
   </div>
 </template>
@@ -83,7 +80,7 @@
 </template>
 
 <template name="timeboxData">
-  <div id="timeboxData{{this._id}}" class="timebox">
+  <div id="timeboxData{{this._id}}" class="timebox {{bgcolor}}">
       <div class="timeboxData_right">
         <div class="btn repeatTimebox">
           Repeat

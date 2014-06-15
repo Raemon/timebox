@@ -36,9 +36,9 @@ body {
 .timerSelect {
     font-size:80px;
     font-weight:bold;
-    color:white;
-    background-color: rgba(255,255, 255, .5);
-    height:150px;
+    color:black;
+    background-color: white;
+    height:120px;
     font-family:helvetica;
     border:none;
     width:150px;
@@ -112,6 +112,25 @@ option.timerSelect{
     text-align: left;
 }
 
+.timebox.red {
+    background-color:rgba(255, 0, 0, .2);
+}
+.timebox.green {
+    background-color:rgba(0, 255, 0, .2);
+}
+.timebox.blue {
+    background-color:rgba(0, 0, 255, .2);
+}
+.timebox.cyan {
+    background-color:rgba(0, 255, 255, .2);
+}
+.timebox.gold {
+    background-color:rgba(255, 255, 0, .2);
+}
+.timebox.white {
+    background-color:rgba(255, 255, 255, .2);
+}
+
 .loginBox {
 /*    background-color: rgba(255, 230, 200, .2);
     width:360px;
@@ -125,7 +144,7 @@ option.timerSelect{
 }
 
 .timeboxCompleted {
-    color:gold;
+    color:white;
 }
 .timeboxIncomplete {
     color:red;

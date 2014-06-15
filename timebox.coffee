@@ -6,7 +6,7 @@ Users = new Meteor.Collection("Users")
 
 
 if root.Meteor.isClient
-
+  countdown = 1500
   Session.set("currentUserID", undefined)
   timerRunning = false
 
@@ -43,10 +43,8 @@ if root.Meteor.isClient
 
 
 
-
-
   startTimebox = () ->
-    setCountdown()
+    setCountdown_fromTimer()
     for timebox in Timeboxes.find({userID: Meteor.userId()}).fetch()
       if !timebox.complete
         Timeboxes.remove(timebox._id)
@@ -59,28 +57,26 @@ if root.Meteor.isClient
       startTime: new Date(),
       endTime: undefined,
       complete: false,
-      tags: undefined,
+      tags: $("#tagsField").val().split(","),
     }
     timerRunning = true
     Session.set("currentTimeboxID", timeboxID)
     timeboxID
 
   completeTimebox = () ->
-    timebox = Timeboxes.findOne(Session.get("currentTimeboxID"))
-    userID = Session.get("currentUser")
+    latestTimebox = Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
     tags = $("#tagsField").val().split(",")
-    duration = 
-    Timeboxes.update timebox._id, 
+    Timeboxes.update latestTimebox._id, 
         {$set: 
           {
             complete: true,
-            final_duration: timebox.duration - countdown
+            final_duration: latestTimebox.duration - countdown
             tags: tags
           }
         }
     timerRunning = false
-    countdown = 0
-    timeboxID
+    setTimer_and_countdown(latestTimebox.duration)
+    latestTimebox._id
       
   testReset = (timeboxID) ->
     Timeboxes.remove(timeboxID)
@@ -95,10 +91,11 @@ if root.Meteor.isClient
         document.title = secondFormat(countdown)
       if countdown == 0
         completeTimebox(Session.get("currentTimeboxID")) 
-        audio = new Audio "cChord.mp3"
-        audio.play()
         if Meteor.user().emails[0].address == "raemon777@gmail.com"
           alert("You have left the zone")
+        audio = new Audio "cChord.mp3"
+        audio.play()
+
       countdown
 
 
@@ -106,6 +103,13 @@ if root.Meteor.isClient
   setInterval () -> 
       timer()
     , 1000
+
+  #helper functions
+  zfill = (string, n) ->
+    string = string.toString()
+    while string.length < n
+      string = "0" + string
+    string
 
   Handlebars.registerHelper "timeRemaining", () ->
     Session.get("timeRemaining")
@@ -117,10 +121,7 @@ if root.Meteor.isClient
     _.range(59)
 
   Handlebars.registerHelper "zfill", (string, n) ->
-    string = string.toString()
-    while string.length < n
-      string = "0" + string
-    string
+    zfill(string, n)
 
   Handlebars.registerHelper "userAddress", () ->
     if Meteor.user()
@@ -158,13 +159,17 @@ if root.Meteor.isClient
   root.Template.currentTimebox.editing = () ->
     return Session.get("timerEditing")
 
-  setCountdown = ()->
+  setCountdown_fromTimer = ()->
     countdown = 0
     countdown += parseInt(document.getElementById("minutesSelect").value) * 60
     countdown += parseInt(document.getElementById("secondsSelect").value)
-    console.log(countdown)
     Session.set("timeRemaining", secondFormat(countdown))
 
+  setTimer_and_countdown = (seconds) ->
+    document.getElementById("minutesSelect").value = parseInt(seconds/60).toString()
+    document.getElementById("secondsSelect").value = parseInt(seconds%60).toString()
+    countdown = seconds
+    Session.set("timeRemaining", secondFormat(countdown))
 
   root.Template.currentTimebox.events
 
@@ -174,11 +179,9 @@ if root.Meteor.isClient
     "keydown #secondsTimer" : (e) ->
       seconds = document.getElementById("secondsTimer")
       minutes = document.getElementById("minutesTimer")
-      console.log "asF"
       if e.which >= 48 && e.which <=57
         if seconds.value.toString().length >= 2
           minutes.focus()
-
 
   root.Template.timerButtons.events
     "click .timer-set": () ->
@@ -189,21 +192,30 @@ if root.Meteor.isClient
         document.getElementById("secondsSelect").value = parseInt(countdown % 60).toString()
       else
         Session.set("settingTimer", undefined)
-        setCountdown()
+        setCountdown_fromTimer()
 
     "click .timer-start": () ->
       if Session.equals("settingTimer", undefined)
-        startTimebox(300)
+        startTimebox()
+      else
+        Session.set("settingTimer", undefined)
+        setCountdown_fromTimer()
+        startTimebox()
     "click .timer-stop": () ->
-      if Session.equals("settingTimer", undefined)
-        completeTimebox()
+      Session.set("settingTimer", undefined)
+      setCountdown_fromTimer()
+      completeTimebox()
 
   root.Template.timeboxData.events
     "click .repeatTimebox": () ->
       $('#tagsField').importTags('')
-      for tag in this.tags
-        $("#tagsField").addTag(tag)
-      startTimebox(this.duration)
+      if this.tags
+        for tag in this.tags
+          $("#tagsField").addTag(tag)
+      setTimer_and_countdown(this.duration)
+      console.log(this)
+      console.log(countdown)
+      startTimebox()
 
 
   root.Template.login.loginError = () ->
@@ -227,12 +239,33 @@ if root.Meteor.isClient
       return "Completed"
     else
       return "Incomplete"
+  root.Template.timeboxData.bgcolor = () ->
+    if this.duration >= 300
+      color = "red"
+    if this.duration >= 600
+      color = "green"
+    if this.duration >= 900
+      color = "blue"
+    if this.duration >= 1200
+      color = "gold"
+    if this.duration >= 1500
+      color = "cyan"
+    if this.duration >= 1800
+      color = "white"
+    color
+    
 
   Template.currentTimebox.rendered = () ->
     countdown = 1500
     document.getElementById("minutesSelect").value = "25"
     Session.set("timeRemaining", secondFormat(countdown))
 
+  Template.oldTimeboxes.rendered = () ->
+    latestTimebox = Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
+    console.log(latestTimebox)
+    $('#tagsField').importTags('')
+    for tag in latestTimebox.tags
+      $("#tagsField").addTag(tag)
 
 if root.Meteor.isServer
   if exports? then root = exports
