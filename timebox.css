@@ -1,11 +1,30 @@
 /* CSS declarations go here */
 
-a {
-    color:gold;
+
+html, body {
+    height: 100%;
 }
+
 * {
   padding: 0;
   margin: 0;
+  color:white;
+}
+
+a {
+    color:gold;
+}
+
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    padding:10px;
+    height: 155px; /* .push must be the same height as .footer */
+    clear: both;
 }
 
 body {
@@ -21,27 +40,25 @@ body {
     text-align:center;
 }
 
-.sec3 {
-    background-color:#22AA33;
-}
-
-.min5 {
-    background-color:#AA7700;
-}
-
-.min25 {
-    background-color:#AA2233;
-}
-
 .timerSelect {
-    font-size:80px;
+    font-size:50px;
     font-weight:bold;
     color:black;
     background-color: white;
     height:120px;
     font-family:helvetica;
     border:none;
-    width:150px;
+    width:130px;
+}
+
+.timer-set {
+    width:90px;
+}
+.timer-start {
+    width:90px;
+}
+.timer-stop {
+    width:90px;
 }
 
 .setTimer {
@@ -55,16 +72,14 @@ body {
 }
 
 .timer {
-    font-size:120px;
-    line-height:125px;
+    font-size:700%;
     color:white;
     font-weight:bold;
     font-family:helvetica;
     visibility:visible;
-    line-height:200px;
-    height:200px;
-
+    line-height:150%;
 }
+
 .timer.settingTimer {
     visibility:hidden;
     height:0px;
@@ -80,15 +95,10 @@ option.timerSelect{
 }
 
 .userInfo {
-    background-color: rgba(255, 255, 255, .1);
+/*    background-color: rgba(255, 255, 255, .1);
     color:white;
-    padding:20px;
-    text-align: center;
-    margin:auto;
-    width:395px;
-    margin-top:50px;
     min-height:350px;
-    /*margin:10px;*/
+    margin:10px;*/
 }
 
 
@@ -104,8 +114,7 @@ option.timerSelect{
 
 .timebox {
     background-color: rgba(255, 230, 200, .2);
-    width:360px;
-    margin-top:15px;
+    margin-top:2px;
     padding:10px;
     min-height:80px;
     clear:both;
@@ -132,11 +141,8 @@ option.timerSelect{
 }
 
 .loginBox {
-/*    background-color: rgba(255, 230, 200, .2);
-    width:360px;
+    background-color: rgba(255, 230, 200, .4);
     padding:10px;
-    height:40px;
-    clear:both;*/
     font-size:11px;
 }
 
@@ -155,6 +161,8 @@ option.timerSelect{
     font-weight: 900;
 }
 
+
+
 .timeboxData_left {
     float: left;
     font-size:12px;
@@ -165,10 +173,12 @@ option.timerSelect{
     float: right;
 }
 
+
+
 .currentTimebox {
-    /*background-color: rgba(255, 220, 240, .5);*/
-    /*margin:10px;*/
     color:grey;
+    width:100%;
+
 }
 
 
@@ -190,7 +200,121 @@ option.timerSelect{
     background-color:white;
 }
 
+#wrapper {
+  padding-left: 250px;
+  transition: all 0.4s ease 0s;
+}
 
-.footer {
-    background-color: rgba(255, 255, 255, .95);
+#sidebar-wrapper {
+  margin-left: -250px;
+  left: 250px;
+  width: 250px;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: all 0.4s ease 0s;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    padding-top:20%;
+}
+
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  line-height: 40px;
+  text-indent: 20px;
+}
+
+.sidebar-nav li a {
+  color: #999999;
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar-nav li a:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+  text-decoration: none;
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  line-height: 60px;
+  font-size: 18px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+
+.content-header {
+  height: 65px;
+  line-height: 65px;
+}
+
+.content-header h1 {
+  margin: 0;
+  margin-left: 20px;
+  line-height: 65px;
+  display: inline-block;
+}
+
+#menu-toggle {
+  display: none;
+}
+
+.inset {
+  padding: 20px;
+}
+
+@media (max-width:767px) {
+
+#wrapper {
+  padding-left: 0;
+  height:100%;
+}
+
+#sidebar-wrapper {
+  left: 0;
+}
+
+#wrapper.active {
+  position: relative;
+  left: 250px;
+}
+
+#wrapper.active #sidebar-wrapper {
+  left: 250px;
+  width: 250px;
+  transition: all 0.4s ease 0s;
+}
+
+#menu-toggle {
+  display: inline-block;
+}
+
+.inset {
+  padding: 15px;
+}
+
 }

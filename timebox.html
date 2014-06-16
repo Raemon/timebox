@@ -8,15 +8,44 @@
 </head>
 
 <body>
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+              {{> userInfo}}
+            </ul>
+        </div>
+
+        <!-- Page content -->
+        <div id="page-content-wrapper">
+          <h2 class="title">Get In the Zone</h2>
+          {{> currentTimebox}}
+        </div>
+    </div>
+
     <!-- {{> starfield}} -->
-    
-    <div class="text-center">
-      {{> header}}
-      {{> currentTimebox}}
+   <!--  <div class="row">
+      <div class="span-9 pull-right main text-center">
+        {{> currentTimebox}}
+      </div>
       {{> userInfo}}
 
+    </div> -->
+<!--     
+    <div class="wrapper">
+      <div class="row">
+        <div class="col-md-2">
+          {{> header}}
+          {{> userInfo}}
+        </div>
+        <div class="col-md-6">
+          {{> currentTimebox}}
+        </div>
+      </div>
     </div>
-    {{>footer}}
+    {{>footer}} -->
+
 </body>
 
 <template name="header">
@@ -26,10 +55,9 @@
 </template>
 
 <template name="currentTimebox">
-  <div class="currentTimebox">
+  <div class="currentTimebox text-center">
 
       <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
-
       <div class="setTimer {{settingTimer}}">
         <select class="timerSelect" id="minutesSelect" value="25">
           {{#each range 59}}
@@ -43,7 +71,6 @@
           {{/each}}
         </select>
       </div>
-
       {{> timerButtons}}
       <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
   </div>
@@ -53,30 +80,24 @@
 </template>
 
 <template name="userInfo">
-  <div class="userInfo">
-    <div class="text-center">
+  <div class="userInfo sidebar pull-left">
       <div class="loginBox">{{> login}}</div>
       {{#if userAddress}}
         {{> oldTimeboxes}}
       {{/if}}
-    </div>
   </div>
 </template>
 
 <template name="timerButtons">
-  <div class="row text-center">
-    <div class="btn btn-large timer-set {{settingTimer}}">Set Time</div>
+    <div class="btn btn-large timer-set {{settingTimer}}">Set</div>
     <div class="btn btn-large btn-primary timer-start ">Start</div>
     <div class="btn btn-large btn-danger timer-stop">Stop</div>
-  </div>
 </template>
 
 <template name="oldTimeboxes">
-  <div class="text-center">
-    {{#each userTimeboxes}}
-      {{> timeboxData}}
-    {{/each}}
-  </div>
+  {{#each userTimeboxes}}
+    {{> timeboxData}}
+  {{/each}}
 </template>
 
 <template name="timeboxData">
@@ -100,12 +121,11 @@
 </template>
 
 <template name="footer">
-  <div class="row footer">
-    <div class="container">
-    {{> mochaTestReport}}
-    {{> serverTestReport}}
+  <div class="footer">
+    The End
+<!--     {{> mochaTestReport}}
+    {{> serverTestReport}} -->
   </div>
-</div>
 </template>
 
 <template name="starfield">
