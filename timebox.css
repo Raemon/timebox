@@ -77,7 +77,8 @@ body {
     font-weight:bold;
     font-family:helvetica;
     visibility:visible;
-    line-height:150%;
+    line-height:200px;
+    height:200px;
 }
 
 .timer.settingTimer {
@@ -119,24 +120,25 @@ option.timerSelect{
     min-height:80px;
     clear:both;
     text-align: left;
+    font-size:12px;
 }
 
-.timebox.red {
+.timebox.d300 {
     background-color:rgba(255, 0, 0, .2);
 }
-.timebox.green {
+.timebox.d600 {
     background-color:rgba(0, 255, 0, .2);
 }
-.timebox.blue {
+.timebox.d900 {
     background-color:rgba(0, 0, 255, .2);
 }
-.timebox.cyan {
+.timebox.d1200 {
     background-color:rgba(0, 255, 255, .2);
 }
-.timebox.gold {
+.timebox.d1500 {
     background-color:rgba(255, 255, 0, .2);
 }
-.timebox.white {
+.timebox.d1800 {
     background-color:rgba(255, 255, 255, .2);
 }
 
@@ -153,7 +155,7 @@ option.timerSelect{
     color:white;
 }
 .timeboxIncomplete {
-    color:red;
+    color:grey;
 }
 
 .timeboxDuration {
@@ -161,12 +163,22 @@ option.timerSelect{
     font-weight: 900;
 }
 
-
-
 .timeboxData_left {
     float: left;
     font-size:12px;
     line-height:20px;
+    opacity:.5;
+}
+.timeboxData_tags {
+  opacity:.5;
+}
+
+.timeboxData_left.Today {
+  opacity:1;
+}
+
+.timeboxData_tags.Today {
+  opacity:1;
 }
 
 .timeboxData_right {
@@ -206,9 +218,9 @@ option.timerSelect{
 }
 
 #sidebar-wrapper {
-  margin-left: -250px;
-  left: 250px;
-  width: 250px;
+  margin-left: -270px;
+  left: 270px;
+  width: 270px;
   position: fixed;
   height: 100%;
   overflow-y: auto;
@@ -304,8 +316,8 @@ option.timerSelect{
 }
 
 #wrapper.active #sidebar-wrapper {
-  left: 250px;
-  width: 250px;
+  left: 280px;
+  width: 280px;
   transition: all 0.4s ease 0s;
 }
 

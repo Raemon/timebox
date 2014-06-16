@@ -13,64 +13,31 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
-              {{> userInfo}}
+              {{> login}}
+              {{> timeboxes}}
             </ul>
         </div>
 
         <!-- Page content -->
         <div id="page-content-wrapper">
-          <h2 class="title">Get In the Zone</h2>
-          {{> currentTimebox}}
-        </div>
-    </div>
-
-    <!-- {{> starfield}} -->
-   <!--  <div class="row">
-      <div class="span-9 pull-right main text-center">
-        {{> currentTimebox}}
-      </div>
-      {{> userInfo}}
-
-    </div> -->
-<!--     
-    <div class="wrapper">
-      <div class="row">
-        <div class="col-md-2">
           {{> header}}
-          {{> userInfo}}
-        </div>
-        <div class="col-md-6">
           {{> currentTimebox}}
+          {{> footer}}
         </div>
-      </div>
     </div>
-    {{>footer}} -->
-
 </body>
 
 <template name="header">
-  <div class="text-center">
-    <h1 class="title header">Get in the Zone</h1>
-  </div>
+  <h2 class="title">Get In the Zone</h2>
 </template>
 
 <template name="currentTimebox">
   <div class="currentTimebox text-center">
 
       <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
-      <div class="setTimer {{settingTimer}}">
-        <select class="timerSelect" id="minutesSelect" value="25">
-          {{#each range 59}}
-            <option class="timerSelect" value="{{this}}">{{zfill this 2}}</option>
-          {{/each}}
-        </select>
-        :
-        <select class="timerSelect" id="secondsSelect" value="0">
-          {{#each range 59}}
-            <option value="{{this}}">{{zfill this 2}}</option>
-          {{/each}}
-        </select>
-      </div>
+      {{> setTimer}}
+
+
       {{> timerButtons}}
       <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
   </div>
@@ -79,52 +46,63 @@
   </script>
 </template>
 
-<template name="userInfo">
-  <div class="userInfo sidebar pull-left">
-      <div class="loginBox">{{> login}}</div>
-      {{#if userAddress}}
-        {{> oldTimeboxes}}
-      {{/if}}
-  </div>
-</template>
+          <template name="setTimer">
+            <div class="setTimer {{settingTimer}}">
+              <select class="timerSelect" id="minutesSelect" value="25">
+                {{#each range 59}}
+                  <option class="timerSelect" value="{{this}}">{{zfill this 2}}</option>
+                {{/each}}
+              </select>
+              :
+              <select class="timerSelect" id="secondsSelect" value="0">
+                {{#each range 59}}
+                  <option value="{{this}}">{{zfill this 2}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </template>
 
-<template name="timerButtons">
-    <div class="btn btn-large timer-set {{settingTimer}}">Set</div>
-    <div class="btn btn-large btn-primary timer-start ">Start</div>
-    <div class="btn btn-large btn-danger timer-stop">Stop</div>
-</template>
+          <template name="timerButtons">
+              <div class="btn btn-large timer-set {{settingTimer}}">Set</div>
+              <div class="btn btn-large btn-primary timer-start ">Start</div>
+              <div class="btn btn-large btn-danger timer-stop">Stop</div>
+          </template>
 
-<template name="oldTimeboxes">
-  {{#each userTimeboxes}}
-    {{> timeboxData}}
-  {{/each}}
+<template name="timeboxes">
+  {{#if userAddress}}
+    {{#each userTimeboxes}}
+      {{> timeboxData}}
+    {{/each}}
+  {{/if}}
 </template>
 
 <template name="timeboxData">
-  <div id="timeboxData{{this._id}}" class="timebox {{bgcolor}}">
+  <div id="timeboxData{{this._id}}" class="timebox {{color}}">
       <div class="timeboxData_right">
         <div class="btn repeatTimebox">
           Repeat
         </div>
       </div>
-      <div class="timeboxData_left">
+      <div class="timeboxData_left {{create_date}}">
         <div class="timeboxDuration">
           {{duration}} - 
           <span class="timebox{{complete}}">{{complete}}</span>
         </div>
         {{create_date}} - {{create_time}}<br>
-
-        Tags: {{tags}}<br>
-    </div>
-
+      </div><br><br>
+      <div class="timeboxData_tags {{create_date}}">
+        Tags: 
+        {{#each tags}}
+          {{this}},
+        {{/each}}
+      </div>
   </div>
 </template>
 
 <template name="footer">
   <div class="footer">
-    The End
-<!--     {{> mochaTestReport}}
-    {{> serverTestReport}} -->
+    {{> mochaTestReport}}
+    {{> serverTestReport}}
   </div>
 </template>
 

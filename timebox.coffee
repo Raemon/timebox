@@ -3,12 +3,23 @@ root = global ? window
 Timeboxes = new Meteor.Collection("Timeboxes");
 Users = new Meteor.Collection("Users")
 
-
+for timebox in Timeboxes.find().fetch()
+  if timebox.duration && timebox.final_duration
+    if timebox.duration == timebox.final_duration
+      Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
+    else
+      Timeboxes.update(timebox._id, { $set: {complete: "Partial"}})
+  else
+    Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
 
 if root.Meteor.isClient
   countdown = 1500
   Session.set("currentUserID", undefined)
   timerRunning = false
+
+
+
+
 
   createUser = (username) ->
 
@@ -41,13 +52,12 @@ if root.Meteor.isClient
       seconds = "0" + seconds
     minutes + ":" + seconds
 
-
+  latestTimebox = () ->
+    Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
 
   startTimebox = () ->
+    completeTimebox()
     setCountdown_fromTimer()
-    for timebox in Timeboxes.find({userID: Meteor.userId()}).fetch()
-      if !timebox.complete
-        Timeboxes.remove(timebox._id)
     Session.set("timeRemaining", secondFormat(countdown))
     if Users.findOne(Session.get("currentUserID")) == undefined
       createUser('TemporaryUser')
@@ -55,8 +65,9 @@ if root.Meteor.isClient
       userID: Meteor.userId(),
       duration: countdown,
       startTime: new Date(),
+      startDate: moment(new Date()).format("MM/DD/YYYY"),
       endTime: undefined,
-      complete: false,
+      complete: "In Progress",
       tags: $("#tagsField").val().split(","),
     }
     timerRunning = true
@@ -64,19 +75,23 @@ if root.Meteor.isClient
     timeboxID
 
   completeTimebox = () ->
-    latestTimebox = Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
+    if countdown != 0
+      complete = "Partial"
+    else
+      complete = "Comopleted"
     tags = $("#tagsField").val().split(",")
-    Timeboxes.update latestTimebox._id, 
+    Timeboxes.update latestTimebox()._id, 
         {$set: 
           {
-            complete: true,
-            final_duration: latestTimebox.duration - countdown
+            complete: complete,
+            final_duration: latestTimebox().duration - countdown
             tags: tags
           }
         }
     timerRunning = false
-    setTimer_and_countdown(latestTimebox.duration)
-    latestTimebox._id
+    setTimer_and_countdown(latestTimebox().duration)
+    document.title = secondFormat(countdown)
+    latestTimebox()._id
       
   testReset = (timeboxID) ->
     Timeboxes.remove(timeboxID)
@@ -130,7 +145,8 @@ if root.Meteor.isClient
       undefined
 
   Handlebars.registerHelper "userTimeboxes", () ->
-    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: 10}).fetch()
+    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: 20}).fetch()
+   
 
   Handlebars.registerHelper "date", (date) ->
     date.getDate()
@@ -223,9 +239,9 @@ if root.Meteor.isClient
 
 
   root.Template.timeboxData.create_date = () ->
-    timeboxDateStr = this.startTime.toDateString()
+    timeboxDateStr = moment(this.startTime).format("MM/DD/YYYY")
     todayDate = new Date()
-    if timeboxDateStr == todayDate.toDateString()
+    if timeboxDateStr == moment(todayDate).format("MM/DD/YYYY")
       return "Today"
 
     return timeboxDateStr
@@ -234,25 +250,42 @@ if root.Meteor.isClient
     moment(this.startTime).format("h:mm A")
   root.Template.timeboxData.duration = () ->
     secondFormat(this.duration)
-  root.Template.timeboxData.complete = () ->
-    if this.complete
-      return "Completed"
-    else
-      return "Incomplete"
   root.Template.timeboxData.bgcolor = () ->
-    if this.duration >= 300
-      color = "red"
-    if this.duration >= 600
-      color = "green"
-    if this.duration >= 900
-      color = "blue"
-    if this.duration >= 1200
-      color = "gold"
-    if this.duration >= 1500
-      color = "cyan"
-    if this.duration >= 1800
-      color = "white"
-    color
+    if this.tags.toString()
+      tagString = this.tags.toString()
+  root.Template.timeboxData.rendered = () ->
+    startDate = moment(this.data.startTime).format("MMDDYYYY")
+    todayDate = moment(new Date()).format("MMDDYYYY")
+    if startDate == todayDate
+      alpha = ".25"
+    else
+      alpha = ".07"
+    color = "200, 200, 200, "
+    if this.data.tags
+      if this.data.tags.toString()
+        tagString = this.data.tags.toString()
+        console.log(tagString)
+        tagLetter = tagString.match(/[aeiou]/)[0]
+        console.log(tagLetter)
+        if tagLetter
+          if tagLetter == "a"
+            color = "255, 150, 150, "
+          if tagLetter == "e"
+            color = "150, 255, 150, "
+          if tagLetter == "i"
+            color = "150, 150, 255, "
+          if tagLetter == "o"
+            color = "255, 255, 150, "
+          if tagLetter == "u"
+            color = "255, 150, 255, "
+
+    this.lastNode.setAttribute("style", "background-color:rgba(" + color + alpha + ");")
+    console.log("background-color:rgba(" + color + alpha + ");")
+
+
+
+
+
     
 
   Template.currentTimebox.rendered = () ->
@@ -260,16 +293,19 @@ if root.Meteor.isClient
     document.getElementById("minutesSelect").value = "25"
     Session.set("timeRemaining", secondFormat(countdown))
 
-  Template.oldTimeboxes.rendered = () ->
-    latestTimebox = Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
-    console.log(latestTimebox)
-    $('#tagsField').importTags('')
-    for tag in latestTimebox.tags
-      $("#tagsField").addTag(tag)
+  Template.timeboxes.rendered = () ->
+    if Meteor.user()
+      console.log(latestTimebox())
+      $('#tagsField').importTags('')
+      for tag in latestTimebox().tags
+        $("#tagsField").addTag(tag)
 
 if root.Meteor.isServer
   if exports? then root = exports
   if window? then root = window
+
+
+
 
 
 root.Timeboxes = Timeboxes
