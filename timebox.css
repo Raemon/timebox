@@ -11,6 +11,10 @@ html, body {
   color:white;
 }
 
+input {
+  color:black;
+}
+
 a {
     color:gold;
 }
@@ -121,6 +125,15 @@ option.timerSelect{
     clear:both;
     text-align: left;
     font-size:12px;
+    opacity:.4;
+}
+
+.timebox.Today {
+  opacity:1;
+}
+
+.timebox:hover {
+  opacity:1;
 }
 
 .timebox.d300 {
@@ -151,11 +164,8 @@ option.timerSelect{
 .repeatTimebox {
 }
 
-.timeboxCompleted {
-    color:white;
-}
 .timeboxIncomplete {
-    color:grey;
+    color:#ababaa;
 }
 
 .timeboxDuration {
@@ -167,18 +177,6 @@ option.timerSelect{
     float: left;
     font-size:12px;
     line-height:20px;
-    opacity:.5;
-}
-.timeboxData_tags {
-  opacity:.5;
-}
-
-.timeboxData_left.Today {
-  opacity:1;
-}
-
-.timeboxData_tags.Today {
-  opacity:1;
 }
 
 .timeboxData_right {
@@ -191,12 +189,32 @@ option.timerSelect{
   font-size:10px;
 }
 
+.tagData {
+  padding:10px;
+  line-height: 14px;
+  font-size:12px;
+}
 
+.tag {
+  background-color:#221010;
+  padding:2px;
+  width:auto;
+  font-size:10px;
+}
 
 .currentTimebox {
     color:grey;
     width:100%;
 
+}
+
+.btn-link {
+  font-size:11px;
+}
+
+.timeDuration {
+  color:black;
+  font-size:18px;
 }
 
 
@@ -246,6 +264,9 @@ option.timerSelect{
   list-style: none;
   margin: 0;
   padding: 0;
+  height:100%;
+  background-color:rgba(255,255,255,.1);
+  border-right:1px solid white;
 }
 
 .sidebar-nav li {

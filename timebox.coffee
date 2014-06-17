@@ -1,56 +1,100 @@
-root = global ? window
-#http://requirebin.com/?gist=6031068
-Timeboxes = new Meteor.Collection("Timeboxes");
-Users = new Meteor.Collection("Users")
+'''
+Todos
 
-for timebox in Timeboxes.find().fetch()
-  if timebox.duration && timebox.final_duration
-    if timebox.duration == timebox.final_duration
-      Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
-    else
-      Timeboxes.update(timebox._id, { $set: {complete: "Partial"}})
-  else
-    Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
+Create Readme for Github
+Fix startTimebox for testing
+test if clicking start creates the right timer
+create dropdown menu for recently used timer-settings
+Create tab-structure
+Basic Tracking
+  total time spent todayday
+  How many timers in a row you've done today
+  Begin a break timer after a work timer
+Toggle-able-Dialogbox
+Begin with tags from latestTimebox
+
+Done:
+
+    !total time spend on a tag
+    !total timeboxes done on a tag
+
+'''
+
+
+
+
+
+
+
+
+
+
+root = global ? window
+Timeboxes = new Meteor.Collection("Timeboxes");
+Tags = new Meteor.Collection("Tags")
+
+
 
 if root.Meteor.isClient
+
+
   countdown = 1500
   Session.set("currentUserID", undefined)
+  Session.set("timeboxLimit", 8)
   timerRunning = false
 
+  fixThings = () ->
+    for timebox in Timeboxes.find().fetch()
+      console.log(timebox)
+      if timebox.duration && timebox.final_duration
+        if timebox.duration == timebox.final_duration
+          Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
+        else
+          Timeboxes.update(timebox._id, { $set: {complete: "Partial"}})
+      else
+        Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
+      adjustTags(timebox)
 
 
 
+  # createUser = (username) ->
 
-  createUser = (username) ->
+  #   # Create a temporary user if appropriate
+  #   if username == "TemporaryUser" 
+  #       number = Users.find({temp:true}).count() + 1
+  #       username += number.toString()
+  #       temp = true
+  #   else
+  #       temp = false
 
-    # Create a temporary user if appropriate
-    if username == "TemporaryUser" 
-        number = Users.find({temp:true}).count() + 1
-        username += number.toString()
-        temp = true
-    else
-        temp = false
-
-    # Check if username already exists
-    if not Users.findOne({username: username})
-      userID = Users.insert({
-        username: username,
-        temp: temp,
-        date_modified: new Date(),
-      })
-      Session.set("currentUserID", userID)
-      userID
-    else
-      Session.set("loginError", "This username is taken")
+  #   # Check if username already exists
+  #   if not Users.findOne({username: username})
+  #     userID = Users.insert({
+  #       username: username,
+  #       temp: temp,
+  #       date_modified: new Date(),
+  #     })
+  #     Session.set("currentUserID", userID)
+  #     userID
+  #   else
+  #     Session.set("loginError", "This username is taken")
 
   secondFormat = (seconds) ->
-    minutes = parseInt(seconds/60).toString()
+    hours = parseInt(seconds/3600).toString()
+    if hours != "0"
+      if hours.length < 2
+        minutes = "0" + minutes
+      hours += ":"
+    else
+      hours = ""
+    minutes = parseInt((seconds%3600)/60).toString()
     if minutes.length < 2
       minutes = "0" + minutes
-    seconds = parseInt(seconds%60).toString()
+    minutes += ":"
+    seconds = parseInt((seconds%3600)%60).toString()
     if seconds.length < 2
       seconds = "0" + seconds
-    minutes + ":" + seconds
+    hours + minutes + seconds
 
   latestTimebox = () ->
     Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
@@ -66,7 +110,6 @@ if root.Meteor.isClient
           {$set: 
             {
               complete: complete,
-              final_duration: latestTimebox().duration - countdown
               tags: tags
             }
           }
@@ -75,11 +118,12 @@ if root.Meteor.isClient
     interruptCounter()
     setCountdown_fromTimer()
     Session.set("timeRemaining", secondFormat(countdown))
-    if Users.findOne(Session.get("currentUserID")) == undefined
-      createUser('TemporaryUser')
+    # if Users.findOne(Session.get("currentUserID")) == undefined
+    #   createUser('TemporaryUser')
     timeboxID = Timeboxes.insert {
       userID: Meteor.userId(),
       duration: countdown,
+      final_duration: 0,
       startTime: new Date(),
       startDate: moment(new Date()).format("MM/DD/YYYY"),
       endTime: undefined,
@@ -95,7 +139,40 @@ if root.Meteor.isClient
     timerRunning = false
     setTimer_and_countdown(latestTimebox().duration)
     document.title = secondFormat(countdown)
+    adjustTags(latestTimebox())
     latestTimebox()._id
+
+  tagNames = () ->
+    if Meteor.user()
+      tags = Tags.find({userID: Meteor.userId()}).fetch();
+      tags = _.pluck(tags, "name")
+      $( "#tagsField_tag" ).autocomplete({
+        source: tags
+      });
+
+  adjustTags = (timebox) ->
+    if timebox.tags
+      for tag in timebox.tags
+        if tag.length > 0
+          newTag = Tags.findOne({name: tag, userID: timebox.userID})
+          if newTag == undefined
+            tagID = Tags.insert({
+              name: tag,
+              userID: timebox.userID,
+              timeSpent: 0,
+              timeboxesCompleted: 0,
+              active: true,
+            })
+          else 
+            tagID = newTag._id
+          if timebox.final_duration
+            time = timebox.final_duration
+          else
+            time = 0
+          console.log(tagID)
+          Tags.update(tagID, { $inc: {timeSpent: time, timeboxesCompleted: 1}})
+          Tags.update(tagID, { $set: {active: true}})
+    tagNames()
       
   testReset = (timeboxID) ->
     Timeboxes.remove(timeboxID)
@@ -108,6 +185,7 @@ if root.Meteor.isClient
       if countdown >= 0
         Session.set("timeRemaining", secondFormat(countdown))
         document.title = secondFormat(countdown)
+        Timeboxes.update(latestTimebox()._id, { $set: {final_duration: latestTimebox().duration - countdown}})
       if countdown == 0
         completeTimebox(Session.get("currentTimeboxID")) 
         if Meteor.user().emails[0].address == "raemon777@gmail.com"
@@ -144,13 +222,29 @@ if root.Meteor.isClient
 
   Handlebars.registerHelper "userAddress", () ->
     if Meteor.user()
-      Meteor.user().emails[0].address
+      if Meteor.user().emails
+        Meteor.user().emails[0].address
     else
       undefined
 
+  Handlebars.registerHelper "secondFormat", (seconds) ->
+    return secondFormat(seconds)
+
   Handlebars.registerHelper "userTimeboxes", () ->
-    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: 20}).fetch()
-   
+    timeboxLimit = Session.get("timeboxLimit")
+    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: timeboxLimit}).fetch()
+  
+  Handlebars.registerHelper "userDurations", () ->
+    timeboxes = Timeboxes.find().fetch();
+    distinctArray = _.uniq(timeboxes, false, (d) -> return d.duration);
+    distinctValues = _.pluck(distinctArray, 'duration')
+    if distinctValues.length 
+      return distinctValues
+    else
+      false
+
+  Handlebars.registerHelper "defaultDurations", () ->
+    [300,600,900,1200,1500,1800]
 
   Handlebars.registerHelper "date", (date) ->
     date.getDate()
@@ -192,6 +286,8 @@ if root.Meteor.isClient
     Session.set("timeRemaining", secondFormat(countdown))
 
   root.Template.currentTimebox.events
+    "click": () ->
+      tagNames()
 
     "click #minutesTimer" : (e) ->
       Session.set("timerEditing", "editing minutes")
@@ -226,6 +322,11 @@ if root.Meteor.isClient
       setCountdown_fromTimer()
       completeTimebox()
 
+  root.Template.durationSelect.events
+    "click": () ->
+      Session.set("settingTimer", undefined)
+      setTimer_and_countdown(this)
+
   root.Template.timeboxData.events
     "click .repeatTimebox": () ->
       $('#tagsField').importTags('')
@@ -233,8 +334,6 @@ if root.Meteor.isClient
         for tag in this.tags
           $("#tagsField").addTag(tag)
       setTimer_and_countdown(this.duration)
-      console.log(this)
-      console.log(countdown)
       startTimebox()
 
     "click .deleteTimebox": () ->
@@ -247,9 +346,20 @@ if root.Meteor.isClient
       setTimer_and_countdown(latestTimebox().duration)
       Timeboxes.remove(this._id)
 
+
   root.Template.login.loginError = () ->
     return Session.get("loginError")
 
+  root.Template.tracking.userTags = () ->
+    Tags.find({
+      userID: Meteor.userId(), 
+      timeboxesCompleted: { $gt: 1}, 
+      timeSpent: { $gt: 1},
+      active: true
+    })
+
+  root.Template.tagData.totalTime = () ->
+    secondFormat(this.timeSpent) 
 
   root.Template.timeboxData.create_date = () ->
     timeboxDateStr = moment(this.startTime).format("MM/DD/YYYY")
@@ -263,6 +373,17 @@ if root.Meteor.isClient
     moment(this.startTime).format("h:mm A")
   root.Template.timeboxData.duration = () ->
     secondFormat(this.duration)
+  root.Template.timeboxData.final_duration = () ->
+    if this.final_duration
+      secondFormat(this.final_duration) + " / "
+
+
+  root.Template.timeboxData.complete = () ->
+    if this.duration != this.final_duration
+      "Incomplete"
+    else
+      "Completed"
+
   root.Template.timeboxData.bgcolor = () ->
     if this.tags.toString()
       tagString = this.tags.toString()
@@ -277,9 +398,7 @@ if root.Meteor.isClient
     if this.data.tags
       if this.data.tags.toString()
         tagString = this.data.tags.toString()
-        console.log(tagString)
         tagLetter = tagString.match(/[aeiou]/)[0]
-        console.log(tagLetter)
         if tagLetter
           if tagLetter == "a"
             color = "255, 150, 150, "
@@ -293,18 +412,41 @@ if root.Meteor.isClient
             color = "255, 150, 255, "
 
     this.lastNode.setAttribute("style", "background-color:rgba(" + color + alpha + ");")
-    console.log("background-color:rgba(" + color + alpha + ");")
 
 
 
 
 
-    
+  
 
   Template.currentTimebox.rendered = () ->
     countdown = 1500
     document.getElementById("minutesSelect").value = "25"
     Session.set("timeRemaining", secondFormat(countdown))
+
+
+
+  Template.timeboxes.events
+    "click #clickToShowMore": () ->
+      timeboxLimit = Session.get("timeboxLimit")
+      Session.set("timeboxLimit", timeboxLimit+100)
+
+  Template.timeboxes.events
+    "click #clickToShowFewer": () ->
+      timeboxLimit = Session.get("timeboxLimit")
+      if timeboxLimit > 100
+        Session.set("timeboxLimit", timeboxLimit-100)
+
+
+
+  Template.timeboxes.show_showMore = () ->
+    timeboxes = Timeboxes.find({userID: Meteor.userId()})
+    console.log(timeboxes.count(), Session.get("timeboxLimit"))
+
+    timeboxes.count() > Session.get("timeboxLimit")
+
+  Template.timeboxes.show_showFewer = () ->
+    Session.get("timeboxLimit") > 100
 
   Template.timeboxes.rendered = () ->
     if Meteor.user()
@@ -313,21 +455,24 @@ if root.Meteor.isClient
       for tag in latestTimebox().tags
         $("#tagsField").addTag(tag)
 
+
+
 if root.Meteor.isServer
   if exports? then root = exports
   if window? then root = window
+
+  Meteor.publish "Tags", ->
+    Employees.find {}
 
 
 
 
 
 root.Timeboxes = Timeboxes
-root.Users = Users
 root.startTimebox = startTimebox
 root.completeTimebox = completeTimebox
 root.secondFormat = secondFormat
 root.timer = timer
-root.createUser = createUser
 root.testReset = testReset
 
 
