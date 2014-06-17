@@ -185,6 +185,12 @@ option.timerSelect{
     float: right;
 }
 
+.timeboxDataButton {
+  margin:2px;
+  width:55px;
+  font-size:10px;
+}
+
 
 
 .currentTimebox {

@@ -68,7 +68,7 @@
               <div class="btn btn-large btn-danger timer-stop">Stop</div>
           </template>
 
-<template name="timeboxes">
+<template name="timeboxes"> 
   {{#if userAddress}}
     {{#each userTimeboxes}}
       {{> timeboxData}}
@@ -79,8 +79,11 @@
 <template name="timeboxData">
   <div id="timeboxData{{this._id}}" class="timebox {{color}}">
       <div class="timeboxData_right">
-        <div class="btn repeatTimebox">
+        <div class="btn btn-small timeboxDataButton repeatTimebox">
           Repeat
+        </div><br>
+        <div class="btn btn-small timeboxDataButton deleteTimebox">
+          Delete
         </div>
       </div>
       <div class="timeboxData_left {{create_date}}">

@@ -55,8 +55,24 @@ if root.Meteor.isClient
   latestTimebox = () ->
     Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
 
+  interruptCounter = () ->
+    if latestTimebox()
+      if countdown != 0
+        complete = "Partial"
+      else
+        complete = "Completed"
+      tags = $("#tagsField").val().split(",")
+      Timeboxes.update latestTimebox()._id, 
+          {$set: 
+            {
+              complete: complete,
+              final_duration: latestTimebox().duration - countdown
+              tags: tags
+            }
+          }
+
   startTimebox = () ->
-    completeTimebox()
+    interruptCounter()
     setCountdown_fromTimer()
     Session.set("timeRemaining", secondFormat(countdown))
     if Users.findOne(Session.get("currentUserID")) == undefined
@@ -75,19 +91,7 @@ if root.Meteor.isClient
     timeboxID
 
   completeTimebox = () ->
-    if countdown != 0
-      complete = "Partial"
-    else
-      complete = "Comopleted"
-    tags = $("#tagsField").val().split(",")
-    Timeboxes.update latestTimebox()._id, 
-        {$set: 
-          {
-            complete: complete,
-            final_duration: latestTimebox().duration - countdown
-            tags: tags
-          }
-        }
+    interruptCounter()
     timerRunning = false
     setTimer_and_countdown(latestTimebox().duration)
     document.title = secondFormat(countdown)
@@ -233,6 +237,15 @@ if root.Meteor.isClient
       console.log(countdown)
       startTimebox()
 
+    "click .deleteTimebox": () ->
+      # c = confirm("Are you sure you want to delete this?")
+      # if c
+      # console.log(this)
+      # if this._id == latestTimebox()._id
+      interruptCounter()
+      timerRunning = false
+      setTimer_and_countdown(latestTimebox().duration)
+      Timeboxes.remove(this._id)
 
   root.Template.login.loginError = () ->
     return Session.get("loginError")
@@ -259,7 +272,7 @@ if root.Meteor.isClient
     if startDate == todayDate
       alpha = ".25"
     else
-      alpha = ".07"
+      alpha = ".1"
     color = "200, 200, 200, "
     if this.data.tags
       if this.data.tags.toString()
