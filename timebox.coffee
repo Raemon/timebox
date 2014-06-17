@@ -4,19 +4,20 @@ Todos
 Create Readme for Github
 Fix startTimebox for testing
 test if clicking start creates the right timer
-create dropdown menu for recently used timer-settings
-Create tab-structure
 Basic Tracking
   total time spent todayday
   How many timers in a row you've done today
   Begin a break timer after a work timer
-Toggle-able-Dialogbox
-Begin with tags from latestTimebox
+Toggleable Alert-at-end-of-timebox
 
 Done:
+    
+    create dropdown menu for recently used timer-settings
+    Begin with tags from latestTimebox
+    total time spend on a tag
+    total timeboxes done on a tag
+    Create tab-structure
 
-    !total time spend on a tag
-    !total timeboxes done on a tag
 
 '''
 
@@ -235,7 +236,7 @@ if root.Meteor.isClient
     Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: timeboxLimit}).fetch()
   
   Handlebars.registerHelper "userDurations", () ->
-    timeboxes = Timeboxes.find().fetch();
+    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch();
     distinctArray = _.uniq(timeboxes, false, (d) -> return d.duration);
     distinctValues = _.pluck(distinctArray, 'duration')
     if distinctValues.length 
@@ -244,7 +245,7 @@ if root.Meteor.isClient
       false
 
   Handlebars.registerHelper "defaultDurations", () ->
-    [300,600,900,1200,1500,1800]
+    [30, 60, 300,600,900,1200,1500,1800, 3]
 
   Handlebars.registerHelper "date", (date) ->
     date.getDate()
@@ -333,6 +334,8 @@ if root.Meteor.isClient
       if this.tags
         for tag in this.tags
           $("#tagsField").addTag(tag)
+      else
+        $("#tagsField").addTag("uncategorized")
       setTimer_and_countdown(this.duration)
       startTimebox()
 
@@ -403,11 +406,11 @@ if root.Meteor.isClient
           if tagLetter == "a"
             color = "255, 150, 150, "
           if tagLetter == "e"
-            color = "150, 255, 150, "
+            color = "150, 200, 150, "
           if tagLetter == "i"
-            color = "150, 150, 255, "
+            color = "255, 200, 150, "
           if tagLetter == "o"
-            color = "255, 255, 150, "
+            color = "150, 150, 255, "
           if tagLetter == "u"
             color = "255, 150, 255, "
 
@@ -450,10 +453,12 @@ if root.Meteor.isClient
 
   Template.timeboxes.rendered = () ->
     if Meteor.user()
-      console.log(latestTimebox())
       $('#tagsField').importTags('')
-      for tag in latestTimebox().tags
-        $("#tagsField").addTag(tag)
+      if latestTimebox()
+        for tag in latestTimebox().tags
+          $("#tagsField").addTag(tag)
+      else
+        $("#tagsField").addTag('uncategorized')
 
 
 

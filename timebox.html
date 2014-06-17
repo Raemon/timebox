@@ -72,16 +72,18 @@
                 Set <span class="caret"></span>
               </button>
                 <ul class="dropdown-menu">
-                  {{#each userDurations}}
-                    {{> durationSelect}}
-                  {{/each}}
-                  <hr>
+                  {{#if userDurations}}
+                    {{#each userDurations}}
+                      {{> durationSelect}}
+                    {{/each}}
+                    <hr>
+                  {{/if}}
                   {{#each defaultDurations}}
                     {{> durationSelect}}
                   {{/each}}
                 </ul>
             </div>
-            <div class="btn btn-large btn-primary timer-start ">Start</div>
+            <div class="btn btn-large btn-warning timer-start ">Start</div>
             <div class="btn btn-large btn-danger timer-stop">Stop</div>
           </template>
 

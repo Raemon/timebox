@@ -33,7 +33,10 @@ a {
 
 body {
     background-color: black;
-    background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');
+    /*background:repeating-linear-gradient(-35deg, #433333, #101010 500px, #101010 500px, #433333 500px);*/
+
+    background:repeating-linear-gradient(35deg, #000000, #322222);
+    /*background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');*/
     background-attachment:fixed;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -156,7 +159,7 @@ option.timerSelect{
 }
 
 .loginBox {
-    background-color: rgba(255, 230, 200, .4);
+    /*background-color: rgba(255, 230, 200, .4);*/
     padding:10px;
     font-size:11px;
 }
