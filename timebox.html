@@ -1,5 +1,5 @@
 <head>
-  <title>timebox</title>
+  <title>Get in the Zone</title>
   <link rel="icon" 
         type="image/png" 
         href="/time.png">
@@ -83,7 +83,7 @@
                   {{/each}}
                 </ul>
             </div>
-            <div class="btn btn-large btn-warning timer-start ">Start</div>
+            <div class="btn btn-large btn-primary timer-start ">Start</div>
             <div class="btn btn-large btn-danger timer-stop">Stop</div>
           </template>
 
@@ -98,9 +98,9 @@
 
 
 <template name="sidebarTabs">
-  <ul class="nav nav-tabs text-center">
-    <li class="active"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
-    <li><a href="#tracking" data-toggle="tab">Tracking</a></li>
+  <ul class="nav nav-tabs">
+    <li class="active menuTab"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
+    <li class="menuTab"><a href="#tracking" data-toggle="tab">Tracking</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane fade in active" id="timeboxes">
@@ -110,26 +110,42 @@
       {{> tracking}}
     </div>
   </div>
-  <script>
-    $('#profile a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    })
-  </script>
+
 </template>
 
 <template name="tracking">
   <div class="tracking">
+    <div class="btn-group"> 
+      <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
+        Time Frame <span class="caret"></span>
+      </button>
+        <ul class="dropdown-menu">
+          <li class="timeframe"><a href="#">Today</a></li>
+          <li class="timeframe"><a href="#">7 Days</a></li>
+          <li class="timeframe"><a href="#">30 Days</a></li>
+          <li class="timeframe"><a href="#">All Time</a></li>
+        </ul>
+    </div>
+
+    <h3>{{trackingTimeframe}}</h3>
+      • Total Time: {{totalTime}}
+
+      {{#each timeframeTags}}
+        {{> tagData}}
+      {{/each}}
+
+<!-- 
+    <h3>All Time</h3>
     {{#each userTags}}
       {{> tagData}}
-    {{/each}}
+    {{/each}} -->
   </div>
 </template>
 
           <template name="tagData">
             <div class="tagData">
-                <b>{{this.name}}</b><br>
-                 • Total Time: {{totalTime}}<br>
+                <b>{{this.tags}}</b><br>
+                 • Total Time: {{this.timeSpent}}<br>
                  • Total Timeboxes: {{this.timeboxesCompleted}}
             </div>
           </template>

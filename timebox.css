@@ -139,23 +139,8 @@ option.timerSelect{
   opacity:1;
 }
 
-.timebox.d300 {
-    background-color:rgba(255, 0, 0, .2);
-}
-.timebox.d600 {
-    background-color:rgba(0, 255, 0, .2);
-}
-.timebox.d900 {
-    background-color:rgba(0, 0, 255, .2);
-}
-.timebox.d1200 {
-    background-color:rgba(0, 255, 255, .2);
-}
-.timebox.d1500 {
-    background-color:rgba(255, 255, 0, .2);
-}
-.timebox.d1800 {
-    background-color:rgba(255, 255, 255, .2);
+.menuTab {
+  font-size:11px;
 }
 
 .loginBox {
@@ -192,10 +177,17 @@ option.timerSelect{
   font-size:10px;
 }
 
+.tracking {
+  padding:10px;
+  font-size:12px;
+}
+.btn-timeframe {
+  background-color:black;
+}
+
 .tagData {
   padding:10px;
   line-height: 14px;
-  font-size:12px;
 }
 
 .tag {

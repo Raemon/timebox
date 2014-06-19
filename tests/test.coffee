@@ -1,11 +1,12 @@
-# describe "Collections", ->
-#   describe "Timeboxes", ->
-#     describe "On startTimebox", ->
-#       it "has duration", ->
-#         timeboxID = startTimebox 5*60
-#         timebox = Timeboxes.findOne(timeboxID)
-#         chai.assert.equal timebox.duration, 5*60
-#         testReset(timeboxID)
+describe "Collections", ->
+  describe "Timeboxes", ->
+    describe "On startTimebox", ->
+      it "has duration", ->
+        setTimer_and_countdown 5*60
+        timeboxID = startTimebox 
+        timebox = Timeboxes.findOne(timeboxID)
+        chai.assert.equal timebox.duration, 5*60
+        testReset(timeboxID)
 #       it "has startTime", ->
 #         date = new Date()
 #         timeboxID = startTimebox 5*60

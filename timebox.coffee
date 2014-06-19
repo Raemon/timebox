@@ -2,7 +2,6 @@
 Todos
 
 Create Readme for Github
-Fix startTimebox for testing
 test if clicking start creates the right timer
 Basic Tracking
   total time spent todayday
@@ -42,11 +41,11 @@ if root.Meteor.isClient
   countdown = 1500
   Session.set("currentUserID", undefined)
   Session.set("timeboxLimit", 8)
+  Session.set("trackingTimeframe", "Today")
   timerRunning = false
 
   fixThings = () ->
     for timebox in Timeboxes.find().fetch()
-      console.log(timebox)
       if timebox.duration && timebox.final_duration
         if timebox.duration == timebox.final_duration
           Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
@@ -55,30 +54,6 @@ if root.Meteor.isClient
       else
         Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
       adjustTags(timebox)
-
-
-
-  # createUser = (username) ->
-
-  #   # Create a temporary user if appropriate
-  #   if username == "TemporaryUser" 
-  #       number = Users.find({temp:true}).count() + 1
-  #       username += number.toString()
-  #       temp = true
-  #   else
-  #       temp = false
-
-  #   # Check if username already exists
-  #   if not Users.findOne({username: username})
-  #     userID = Users.insert({
-  #       username: username,
-  #       temp: temp,
-  #       date_modified: new Date(),
-  #     })
-  #     Session.set("currentUserID", userID)
-  #     userID
-  #   else
-  #     Session.set("loginError", "This username is taken")
 
   secondFormat = (seconds) ->
     hours = parseInt(seconds/3600).toString()
@@ -126,7 +101,6 @@ if root.Meteor.isClient
       duration: countdown,
       final_duration: 0,
       startTime: new Date(),
-      startDate: moment(new Date()).format("MM/DD/YYYY"),
       endTime: undefined,
       complete: "In Progress",
       tags: $("#tagsField").val().split(","),
@@ -170,7 +144,6 @@ if root.Meteor.isClient
             time = timebox.final_duration
           else
             time = 0
-          console.log(tagID)
           Tags.update(tagID, { $inc: {timeSpent: time, timeboxesCompleted: 1}})
           Tags.update(tagID, { $set: {active: true}})
     tagNames()
@@ -353,6 +326,45 @@ if root.Meteor.isClient
   root.Template.login.loginError = () ->
     return Session.get("loginError")
 
+  root.Template.tracking.events
+    "click .timeframe": (e) ->
+      console.log(e.target.innerHTML)
+      Session.set("trackingTimeframe", e.target.innerHTML)
+
+  root.Template.tracking.trackingTimeframe = () ->
+    Session.get("trackingTimeframe")
+
+  trackingDate = (string) ->
+    trackingDate = new Date().setHours(0,0,0,0)
+    if string == "Today"
+      return trackingDate
+    if string == "7 Days"
+      return trackingDate - 1000*60*60*24*7
+    if string == "30 Days"
+      return trackingDate - 1000*60*60*24*30
+
+
+  root.Template.tracking.timeframeTags = () ->
+    trackingDate = trackingDate(Session.get("trackingTimeframe"))
+    timeboxes = Timeboxes.find({userID: Meteor.userId()}, { sort: {startTime: -1}}).fetch()
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > trackingDate)
+    tagStrings = {}
+    for timebox in timeboxes
+      console.log timebox
+      if !tagStrings[timebox.tags.toString()]
+        tagStrings[timebox.tags.toString()] = {}
+        tagStrings[timebox.tags.toString()]['tags'] = timebox.tags.toString()
+        tagStrings[timebox.tags.toString()]['timeSpent'] = 0
+        tagStrings[timebox.tags.toString()]['timeboxesCompleted'] = 0
+      tagStrings[timebox.tags.toString()]['timeSpent'] += timebox.final_duration
+      if timebox.duration == timebox.final_duration
+        tagStrings[timebox.tags.toString()]['timeboxesCompleted'] += 1
+    array2 = _.toArray(tagStrings)
+
+
+
+
+
   root.Template.tracking.userTags = () ->
     Tags.find({
       userID: Meteor.userId(), 
@@ -360,6 +372,16 @@ if root.Meteor.isClient
       timeSpent: { $gt: 1},
       active: true
     })
+
+
+  root.Template.tracking.totalTime = () ->
+    today = new Date().setHours(0,0,0,0)
+    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch()
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > today)
+    totalTime = 0
+    timeboxes.forEach((timebox, index, array) -> totalTime += timebox.final_duration)
+    secondFormat(totalTime)
+
 
   root.Template.tagData.totalTime = () ->
     secondFormat(this.timeSpent) 
@@ -444,7 +466,6 @@ if root.Meteor.isClient
 
   Template.timeboxes.show_showMore = () ->
     timeboxes = Timeboxes.find({userID: Meteor.userId()})
-    console.log(timeboxes.count(), Session.get("timeboxLimit"))
 
     timeboxes.count() > Session.get("timeboxLimit")
 
@@ -459,12 +480,18 @@ if root.Meteor.isClient
           $("#tagsField").addTag(tag)
       else
         $("#tagsField").addTag('uncategorized')
+      if Meteor.user().emails[0].address == "raemon777@gmail.com"
+        console.log(Meteor.users.find().fetch())
+
+
 
 
 
 if root.Meteor.isServer
   if exports? then root = exports
   if window? then root = window
+
+
 
   Meteor.publish "Tags", ->
     Employees.find {}
