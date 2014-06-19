@@ -4,13 +4,14 @@ Todos
 Create Readme for Github
 test if clicking start creates the right timer
 Basic Tracking
-  total time spent todayday
   How many timers in a row you've done today
   Begin a break timer after a work timer
 Toggleable Alert-at-end-of-timebox
 
 Done:
     
+    total time spent todayday
+
     create dropdown menu for recently used timer-settings
     Begin with tags from latestTimebox
     total time spend on a tag
@@ -37,7 +38,6 @@ Tags = new Meteor.Collection("Tags")
 
 if root.Meteor.isClient
 
-
   countdown = 1500
   Session.set("currentUserID", undefined)
   Session.set("timeboxLimit", 8)
@@ -53,7 +53,7 @@ if root.Meteor.isClient
           Timeboxes.update(timebox._id, { $set: {complete: "Partial"}})
       else
         Timeboxes.update(timebox._id, { $set: {complete: "Completed"}})
-      adjustTags(timebox)
+      updateTags(timebox)
 
   secondFormat = (seconds) ->
     hours = parseInt(seconds/3600).toString()
@@ -114,7 +114,7 @@ if root.Meteor.isClient
     timerRunning = false
     setTimer_and_countdown(latestTimebox().duration)
     document.title = secondFormat(countdown)
-    adjustTags(latestTimebox())
+    updateTags(latestTimebox())
     latestTimebox()._id
 
   tagNames = () ->
@@ -125,7 +125,7 @@ if root.Meteor.isClient
         source: tags
       });
 
-  adjustTags = (timebox) ->
+  updateTags = (timebox) ->
     if timebox.tags
       for tag in timebox.tags
         if tag.length > 0
@@ -147,10 +147,36 @@ if root.Meteor.isClient
           Tags.update(tagID, { $inc: {timeSpent: time, timeboxesCompleted: 1}})
           Tags.update(tagID, { $set: {active: true}})
     tagNames()
+
+  trackingDate = (string) ->
+    date = new Date().setHours(0,0,0,0)
+    if string == "Today"
+      return date
+    if string == "7 Days"
+      return date - 1000*60*60*24*7
+    if string == "30 Days"
+      return date - 1000*60*60*24*30
+
+  updateTagTracking = () ->
+    date = trackingDate(Session.get("trackingTimeframe"))
+    timeboxes = Timeboxes.find({userID: Meteor.userId()}, { sort: {startTime: -1}}).fetch()
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > date)
+    tagStrings = {}
+    for timebox in timeboxes
+      if !tagStrings[timebox.tags.sort().toString()]
+        tagStrings[timebox.tags.sort().toString()] = {}
+        tagStrings[timebox.tags.sort().toString()]['tags'] = timebox.tags.toString()
+        tagStrings[timebox.tags.sort().toString()]['timeSpent'] = 0
+        tagStrings[timebox.tags.sort().toString()]['timeboxesCompleted'] = 0
+      tagStrings[timebox.tags.toString()]['timeSpent'] += timebox.final_duration
+      if timebox.duration == timebox.final_duration
+        tagStrings[timebox.tags.sort().toString()]['timeboxesCompleted'] += 1
+    Session.set("tagTracking", _.toArray(tagStrings))
       
   testReset = (timeboxID) ->
     Timeboxes.remove(timeboxID)
-    countdown = 1500
+    countdown = 0
+    timerRunning = false
     Session.set("timeRemaining", secondFormat(countdown))
 
   timer = () ->
@@ -160,6 +186,7 @@ if root.Meteor.isClient
         Session.set("timeRemaining", secondFormat(countdown))
         document.title = secondFormat(countdown)
         Timeboxes.update(latestTimebox()._id, { $set: {final_duration: latestTimebox().duration - countdown}})
+        updateTagTracking()
       if countdown == 0
         completeTimebox(Session.get("currentTimeboxID")) 
         if Meteor.user().emails[0].address == "raemon777@gmail.com"
@@ -313,13 +340,6 @@ if root.Meteor.isClient
       startTimebox()
 
     "click .deleteTimebox": () ->
-      # c = confirm("Are you sure you want to delete this?")
-      # if c
-      # console.log(this)
-      # if this._id == latestTimebox()._id
-      interruptCounter()
-      timerRunning = false
-      setTimer_and_countdown(latestTimebox().duration)
       Timeboxes.remove(this._id)
 
 
@@ -328,38 +348,15 @@ if root.Meteor.isClient
 
   root.Template.tracking.events
     "click .timeframe": (e) ->
-      console.log(e.target.innerHTML)
       Session.set("trackingTimeframe", e.target.innerHTML)
+      updateTagTracking()
 
   root.Template.tracking.trackingTimeframe = () ->
     Session.get("trackingTimeframe")
 
-  trackingDate = (string) ->
-    trackingDate = new Date().setHours(0,0,0,0)
-    if string == "Today"
-      return trackingDate
-    if string == "7 Days"
-      return trackingDate - 1000*60*60*24*7
-    if string == "30 Days"
-      return trackingDate - 1000*60*60*24*30
-
 
   root.Template.tracking.timeframeTags = () ->
-    trackingDate = trackingDate(Session.get("trackingTimeframe"))
-    timeboxes = Timeboxes.find({userID: Meteor.userId()}, { sort: {startTime: -1}}).fetch()
-    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > trackingDate)
-    tagStrings = {}
-    for timebox in timeboxes
-      console.log timebox
-      if !tagStrings[timebox.tags.toString()]
-        tagStrings[timebox.tags.toString()] = {}
-        tagStrings[timebox.tags.toString()]['tags'] = timebox.tags.toString()
-        tagStrings[timebox.tags.toString()]['timeSpent'] = 0
-        tagStrings[timebox.tags.toString()]['timeboxesCompleted'] = 0
-      tagStrings[timebox.tags.toString()]['timeSpent'] += timebox.final_duration
-      if timebox.duration == timebox.final_duration
-        tagStrings[timebox.tags.toString()]['timeboxesCompleted'] += 1
-    array2 = _.toArray(tagStrings)
+    Session.get("tagTracking")
 
 
 
@@ -483,7 +480,8 @@ if root.Meteor.isClient
       if Meteor.user().emails[0].address == "raemon777@gmail.com"
         console.log(Meteor.users.find().fetch())
 
-
+  Template.tracking.rendered = () ->
+    updateTagTracking()
 
 
 
@@ -504,6 +502,7 @@ root.Timeboxes = Timeboxes
 root.startTimebox = startTimebox
 root.completeTimebox = completeTimebox
 root.secondFormat = secondFormat
+root.setTimer_and_countdown = setTimer_and_countdown
 root.timer = timer
 root.testReset = testReset
 

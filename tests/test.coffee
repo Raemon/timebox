@@ -1,9 +1,15 @@
+describe "TestingStartCondition", ->
+  describe "Collections", ->
+    it "has X timeboxes", ->
+      timeboxCount = Timeboxes.find().count()
+      console.log("Timebox Count: ", timeboxCount)
+
 describe "Collections", ->
   describe "Timeboxes", ->
     describe "On startTimebox", ->
       it "has duration", ->
         setTimer_and_countdown 5*60
-        timeboxID = startTimebox 
+        timeboxID = startTimebox()
         timebox = Timeboxes.findOne(timeboxID)
         chai.assert.equal timebox.duration, 5*60
         testReset(timeboxID)
@@ -93,5 +99,8 @@ describe "Collections", ->
 #     it "timer exists", ->
 #       timer = document.getElementById("timer")
 
-
+describe "TestingEndConditions", ->
+  describe "Collections", ->
+    it "has X timeboxes", ->
+      Timeboxes.find().count() = timeboxCount
 

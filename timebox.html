@@ -9,7 +9,6 @@
 
 <body>
     <div id="wrapper">
-
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
@@ -26,7 +25,7 @@
         <div id="page-content-wrapper">
           {{> header}}
           {{> currentTimebox}}
-          <!-- {{> footer}} -->
+          {{> testing}}
         </div>
     </div>
 </body>
@@ -88,36 +87,39 @@
           </template>
 
 
-<template name="durationSelect">
-  <li class="timeDuration">
-    <a href="#">
-      {{secondFormat this}}
-    </a>
-  </li>
-</template>
+          <template name="durationSelect">
+            <li class="timeDuration">
+              <a href="#">
+                {{secondFormat this}}
+              </a>
+            </li>
+          </template>
 
 
 <template name="sidebarTabs">
-  <ul class="nav nav-tabs">
-    <li class="active menuTab"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
-    <li class="menuTab"><a href="#tracking" data-toggle="tab">Tracking</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane fade in active" id="timeboxes">
-      {{> timeboxes}}
-    </div>
-    <div class="tab-pane fade" id="tracking">
-      {{> tracking}}
+  <div class="sidebar">
+    <ul class="nav nav-tabs">
+      <li class="active menuTab"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
+      <li class="menuTab"><a href="#tracking" data-toggle="tab">Tracking</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="timeboxes">
+        {{> timeboxes}}
+      </div>
+      <div class="tab-pane fade" id="tracking">
+        {{> tracking}}
+      </div>
     </div>
   </div>
+
 
 </template>
 
 <template name="tracking">
   <div class="tracking">
-    <div class="btn-group"> 
+    <div class="btn-group btn-timeframe"> 
       <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
-        Time Frame <span class="caret"></span>
+        {{trackingTimeframe}} <span class="caret"></span>
       </button>
         <ul class="dropdown-menu">
           <li class="timeframe"><a href="#">Today</a></li>
@@ -127,8 +129,9 @@
         </ul>
     </div>
 
-    <h3>{{trackingTimeframe}}</h3>
-      • Total Time: {{totalTime}}
+    <br><br>
+
+      Total Time: {{totalTime}}
 
       {{#each timeframeTags}}
         {{> tagData}}
@@ -140,12 +143,12 @@
       {{> tagData}}
     {{/each}} -->
   </div>
-</template>
+</template> 
 
           <template name="tagData">
             <div class="tagData">
                 <b>{{this.tags}}</b><br>
-                 • Total Time: {{this.timeSpent}}<br>
+                 • Total Time: {{secondFormat this.timeSpent}}<br>
                  • Total Timeboxes: {{this.timeboxesCompleted}}
             </div>
           </template>
@@ -195,7 +198,7 @@
   </div>
 </template>
 
-<template name="footer">
+<template name="testing">
   <div class="footer">
     {{> mochaTestReport}}
     {{> serverTestReport}}
