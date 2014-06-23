@@ -3,17 +3,19 @@ Todos
 
 Create Readme for Github
 test if clicking start creates the right timer
-Basic Tracking
-  How many timers in a row you've done today
-  Begin a break timer after a work timer
+Begin a break timer after a work timer
+
 Toggleable Alert-at-end-of-timebox
 
 Done:
-    
+
+  Basic Tracking
+    How many timers in a row you've done today
+
     total time spent todayday
 
     create dropdown menu for recently used timer-settings
-    Begin with tags from latestTimebox
+    Begin with tags from currentTimebox
     total time spend on a tag
     total timeboxes done on a tag
     Create tab-structure
@@ -21,19 +23,9 @@ Done:
 
 '''
 
-
-
-
-
-
-
-
-
-
 root = global ? window
 Timeboxes = new Meteor.Collection("Timeboxes");
 Tags = new Meteor.Collection("Tags")
-
 
 
 if root.Meteor.isClient
@@ -72,21 +64,22 @@ if root.Meteor.isClient
       seconds = "0" + seconds
     hours + minutes + seconds
 
-  latestTimebox = () ->
-    Timeboxes.findOne({userID: Meteor.userId()}, {sort: {startTime: -1}})
+  currentTimebox = () ->
+    if Session.get("currentTimeboxID")
+      return Timeboxes.findOne(Session.get("currentTimeboxID"))
+    else
+      return undefined
 
   interruptCounter = () ->
-    if latestTimebox()
+    if currentTimebox()
       if countdown != 0
         complete = "Partial"
       else
         complete = "Completed"
-      tags = $("#tagsField").val().split(",")
-      Timeboxes.update latestTimebox()._id, 
+      Timeboxes.update currentTimebox()._id, 
           {$set: 
             {
               complete: complete,
-              tags: tags
             }
           }
 
@@ -110,12 +103,21 @@ if root.Meteor.isClient
     timeboxID
 
   completeTimebox = () ->
+    timebox = currentTimebox()
     interruptCounter()
     timerRunning = false
-    setTimer_and_countdown(latestTimebox().duration)
+    setTimer_and_countdown(timebox.duration)
+    updateTags(timebox)
     document.title = secondFormat(countdown)
-    updateTags(latestTimebox())
-    latestTimebox()._id
+    tags = $("#tagsField").val().split(",")
+    Timeboxes.update timebox._id, 
+        {$set: 
+          {
+            tags: tags
+          }
+        }
+    Session.set("currentTimeboxID", undefined)
+    timebox._id
 
   tagNames = () ->
     if Meteor.user()
@@ -185,7 +187,7 @@ if root.Meteor.isClient
       if countdown >= 0
         Session.set("timeRemaining", secondFormat(countdown))
         document.title = secondFormat(countdown)
-        Timeboxes.update(latestTimebox()._id, { $set: {final_duration: latestTimebox().duration - countdown}})
+        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration - countdown}})
         updateTagTracking()
       if countdown == 0
         completeTimebox(Session.get("currentTimeboxID")) 
@@ -262,17 +264,11 @@ if root.Meteor.isClient
   Handlebars.registerHelper "settingTimer", () ->
     Session.get("settingTimer")
 
-  keycodeIsNumber = (input) ->
-    if input >= 48 && input <=57
-      true
-
   timerUneditable = () ->
     document.getElementById("secondsTimer").contentEditable = false
     document.getElementById("minutesTimer").contentEditable = false
 
 
-  root.Template.currentTimebox.editing = () ->
-    return Session.get("timerEditing")
 
   setCountdown_fromTimer = ()->
     countdown = 0
@@ -286,7 +282,159 @@ if root.Meteor.isClient
     countdown = seconds
     Session.set("timeRemaining", secondFormat(countdown))
 
-  root.Template.currentTimebox.events
+  root.Template.timeboxData.current = ->
+    if currentTimebox()
+      if this._id == currentTimebox()._id
+        return "current"
+      else
+        return undefined
+
+  root.Template.timeboxData.events
+    "click .repeatTimebox": () ->
+      $('#tagsField').importTags('')
+      if this.tags
+        for tag in this.tags
+          $("#tagsField").addTag(tag)
+      else
+        $("#tagsField").addTag("uncategorized")
+      setTimer_and_countdown(this.duration)
+      startTimebox()
+
+    "click .deleteTimebox": () ->
+      Timeboxes.remove(this._id)
+
+    "click .addTag": ()->
+      Session.set("addingTag" + this._id, "addingTag")
+      $("#addTag" + this._id).focus()
+
+    "click .deleteTag": (e) ->
+      timeboxID = e.target.parentElement.parentElement.id
+      tag = e.target.parentElement.innerHTML.trim().split(" ")[0]
+      Timeboxes.update(timeboxID, { $pull: { tags: tag}})
+      if currentTimebox()
+        if currentTimebox()._id == timeboxID
+          $("#tagsField").removeTag(tag)
+
+    "keydown .addTagField": (e)->
+      if e.which == 13
+        if e.target.value.trim() != ""
+          Timeboxes.update(this._id, { $addToSet: { tags: e.target.value}})
+          if currentTimebox()
+            if currentTimebox()._id == this._id
+              $("#tagsField").addTag(e.target.value.trim())
+        e.target.value = ""
+        Session.set("addingTag" + this._id, undefined)
+
+    "focusout .addTagField": (e)->
+      Session.set("addingTag" + this._id, undefined)
+      e.target.value = ""
+
+  root.Template.login.loginError = () ->
+    return Session.get("loginError")
+
+  root.Template.tracking.events
+    "click .timeframe": (e) ->
+      Session.set("trackingTimeframe", e.target.innerHTML)
+      updateTagTracking()
+
+  root.Template.tracking.trackingTimeframe = () ->
+    Session.get("trackingTimeframe")
+
+
+  root.Template.tracking.timeframeTags = () ->
+    Session.get("tagTracking")
+
+
+  root.Template.tracking.userTags = () ->
+    Tags.find({
+      userID: Meteor.userId(), 
+      timeboxesCompleted: { $gt: 1}, 
+      timeSpent: { $gt: 1},
+      active: true
+    })
+
+
+  root.Template.tracking.totalTime = () ->
+    today = new Date().setHours(0,0,0,0)
+    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch()
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > today)
+    totalTime = 0
+    timeboxes.forEach((timebox, index, array) -> totalTime += timebox.final_duration)
+    secondFormat(totalTime)
+
+
+  root.Template.tagData.totalTime = () ->
+    secondFormat(this.timeSpent) 
+
+  root.Template.timeboxData.create_date = () ->
+    timeboxDateStr = moment(this.startTime).format("MM/DD/YYYY")
+    todayDate = new Date()
+    if timeboxDateStr == moment(todayDate).format("MM/DD/YYYY")
+      return "Today"
+
+    return timeboxDateStr
+
+  root.Template.timeboxData.create_time = () ->
+    moment(this.startTime).format("h:mm A")
+  root.Template.timeboxData.duration = () ->
+    secondFormat(this.duration)
+  root.Template.timeboxData.final_duration = () ->
+    if this.final_duration
+      secondFormat(this.final_duration) + " / "
+  root.Template.timeboxData.addingTag = () ->
+    Session.get("addingTag" + this._id)
+
+  root.Template.timeboxData.complete = () ->
+    if this.duration != this.final_duration
+      "Incomplete"
+    else
+      "Completed"
+
+  root.Template.timeboxData.bgcolor = () ->
+    if this.tags.toString()
+      tagString = this.tags.toString()
+
+  root.Template.timeboxData.rendered = () ->
+    startDate = moment(this.data.startTime).format("MMDDYYYY")
+    todayDate = moment(new Date()).format("MMDDYYYY")
+
+    if startDate == todayDate
+      alpha = ".25"
+    else
+      alpha = ".1"
+    color = "200, 200, 200, "
+    if this.data.tags
+      if this.data.tags.toString()
+        tagString = this.data.tags.toString()
+        if tagString.match(/[aeiou]/)
+          tagLetter = tagString.match(/[aeiou]/)[0]
+          if tagLetter == "a"
+            color = "255, 150, 150, "
+          if tagLetter == "e"
+            color = "150, 200, 150, "
+          if tagLetter == "i"
+            color = "255, 200, 150, "
+          if tagLetter == "o"
+            color = "150, 150, 255, "
+          if tagLetter == "u"
+            color = "255, 150, 255, "
+
+    this.lastNode.setAttribute("style", "background-color:rgba(" + color + alpha + ");")
+
+  Template.bigTimer.rendered = () ->
+      countdown = 1500
+      document.getElementById("minutesSelect").value = "25"
+      Session.set("timeRemaining", secondFormat(countdown))
+      $("#tagsField").tagsInput 
+        onChange: (tag) ->
+          if currentTimebox()
+            Timeboxes.update(currentTimebox()._id, { $set: { tags: $("#tagsField").val().split(",")}})
+      console.log("asdf")
+
+  root.Template.bigTimer.editing = () ->
+      return Session.get("timerEditing")
+
+  root.Template.bigTimer.events
     "click": () ->
       tagNames()
 
@@ -328,132 +476,11 @@ if root.Meteor.isClient
       Session.set("settingTimer", undefined)
       setTimer_and_countdown(this)
 
-  root.Template.timeboxData.events
-    "click .repeatTimebox": () ->
-      $('#tagsField').importTags('')
-      if this.tags
-        for tag in this.tags
-          $("#tagsField").addTag(tag)
-      else
-        $("#tagsField").addTag("uncategorized")
-      setTimer_and_countdown(this.duration)
-      startTimebox()
-
-    "click .deleteTimebox": () ->
-      Timeboxes.remove(this._id)
-
-
-  root.Template.login.loginError = () ->
-    return Session.get("loginError")
-
-  root.Template.tracking.events
-    "click .timeframe": (e) ->
-      Session.set("trackingTimeframe", e.target.innerHTML)
-      updateTagTracking()
-
-  root.Template.tracking.trackingTimeframe = () ->
-    Session.get("trackingTimeframe")
-
-
-  root.Template.tracking.timeframeTags = () ->
-    Session.get("tagTracking")
-
-
-
-
-
-  root.Template.tracking.userTags = () ->
-    Tags.find({
-      userID: Meteor.userId(), 
-      timeboxesCompleted: { $gt: 1}, 
-      timeSpent: { $gt: 1},
-      active: true
-    })
-
-
-  root.Template.tracking.totalTime = () ->
-    today = new Date().setHours(0,0,0,0)
-    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch()
-    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > today)
-    totalTime = 0
-    timeboxes.forEach((timebox, index, array) -> totalTime += timebox.final_duration)
-    secondFormat(totalTime)
-
-
-  root.Template.tagData.totalTime = () ->
-    secondFormat(this.timeSpent) 
-
-  root.Template.timeboxData.create_date = () ->
-    timeboxDateStr = moment(this.startTime).format("MM/DD/YYYY")
-    todayDate = new Date()
-    if timeboxDateStr == moment(todayDate).format("MM/DD/YYYY")
-      return "Today"
-
-    return timeboxDateStr
-
-  root.Template.timeboxData.create_time = () ->
-    moment(this.startTime).format("h:mm A")
-  root.Template.timeboxData.duration = () ->
-    secondFormat(this.duration)
-  root.Template.timeboxData.final_duration = () ->
-    if this.final_duration
-      secondFormat(this.final_duration) + " / "
-
-
-  root.Template.timeboxData.complete = () ->
-    if this.duration != this.final_duration
-      "Incomplete"
-    else
-      "Completed"
-
-  root.Template.timeboxData.bgcolor = () ->
-    if this.tags.toString()
-      tagString = this.tags.toString()
-  root.Template.timeboxData.rendered = () ->
-    startDate = moment(this.data.startTime).format("MMDDYYYY")
-    todayDate = moment(new Date()).format("MMDDYYYY")
-    if startDate == todayDate
-      alpha = ".25"
-    else
-      alpha = ".1"
-    color = "200, 200, 200, "
-    if this.data.tags
-      if this.data.tags.toString()
-        tagString = this.data.tags.toString()
-        tagLetter = tagString.match(/[aeiou]/)[0]
-        if tagLetter
-          if tagLetter == "a"
-            color = "255, 150, 150, "
-          if tagLetter == "e"
-            color = "150, 200, 150, "
-          if tagLetter == "i"
-            color = "255, 200, 150, "
-          if tagLetter == "o"
-            color = "150, 150, 255, "
-          if tagLetter == "u"
-            color = "255, 150, 255, "
-
-    this.lastNode.setAttribute("style", "background-color:rgba(" + color + alpha + ");")
-
-
-
-
-
-  
-
-  Template.currentTimebox.rendered = () ->
-    countdown = 1500
-    document.getElementById("minutesSelect").value = "25"
-    Session.set("timeRemaining", secondFormat(countdown))
-
-
-
-  Template.timeboxes.events
+  Template.logTimeboxes.events
     "click #clickToShowMore": () ->
       timeboxLimit = Session.get("timeboxLimit")
       Session.set("timeboxLimit", timeboxLimit+100)
 
-  Template.timeboxes.events
     "click #clickToShowFewer": () ->
       timeboxLimit = Session.get("timeboxLimit")
       if timeboxLimit > 100
@@ -461,19 +488,21 @@ if root.Meteor.isClient
 
 
 
-  Template.timeboxes.show_showMore = () ->
+
+
+  Template.logTimeboxes.show_showMore = () ->
     timeboxes = Timeboxes.find({userID: Meteor.userId()})
 
     timeboxes.count() > Session.get("timeboxLimit")
 
-  Template.timeboxes.show_showFewer = () ->
+  Template.logTimeboxes.show_showFewer = () ->
     Session.get("timeboxLimit") > 100
 
-  Template.timeboxes.rendered = () ->
+  Template.logTimeboxes.rendered = () ->
     if Meteor.user()
       $('#tagsField').importTags('')
-      if latestTimebox()
-        for tag in latestTimebox().tags
+      if currentTimebox()
+        for tag in currentTimebox().tags
           $("#tagsField").addTag(tag)
       else
         $("#tagsField").addTag('uncategorized')
@@ -497,7 +526,7 @@ if root.Meteor.isServer
 
 
 
-
+root.currentTimebox = currentTimebox
 root.Timeboxes = Timeboxes
 root.startTimebox = startTimebox
 root.completeTimebox = completeTimebox
@@ -505,6 +534,8 @@ root.secondFormat = secondFormat
 root.setTimer_and_countdown = setTimer_and_countdown
 root.timer = timer
 root.testReset = testReset
+
+console.log(root)
 
 
 

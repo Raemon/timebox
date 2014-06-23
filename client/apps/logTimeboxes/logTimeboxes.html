@@ -1,0 +1,50 @@
+<template name="logTimeboxes">
+  <div id="test123">
+    {{#each userTimeboxes}}
+      {{> timeboxData}}
+    {{/each}}
+  </div>
+  <div class="btn-link text-center">
+    {{#if show_showMore}}
+      <a id="clickToShowMore" class="text-center">(Click to show more)</a>
+    {{/if}}
+    {{#if show_showFewer}}
+      <a id="clickToShowFewer" class="text-center">(Click to show fewer)</a>
+    {{/if}}
+  </div>
+</template>
+
+<template name="timeboxData">
+  <div id="timeboxData{{this._id}}" class="timebox {{create_date}} {{current}}">
+      <div class="timeboxData_right">
+        <div class="btn btn-small timeboxDataButton repeatTimebox">
+          Repeat
+        </div><br>
+        <div class="btn btn-small timeboxDataButton deleteTimebox">
+          Delete
+        </div>
+      </div>
+      <div class="timeboxData_left">
+        <div class="timeboxDuration">
+          <span class="timebox{{complete}}">{{final_duration}}</span>{{duration}}
+        </div>
+        {{create_date}} - {{create_time}}<br>
+      </div><br><br>
+      <div class="timeboxData_tags" id="{{this._id}}">
+        {{#each tags}}
+          {{> tag}}
+        {{/each}}
+        {{#unless addingTag}}
+          <div class="timeboxDataTag addTag">+</div>
+        {{/unless}}
+        <input class="timeboxDataTag addTagField {{addingTag}}" id="addTag{{this._id}}"/>
+        <div style="clear: both;"></div>
+      </div>
+  </div>
+</template>
+
+    <template name="tag">
+      <div class="timeboxDataTag">
+        {{this}} <span class="deleteTag">x</span>
+      </div>
+    </template>

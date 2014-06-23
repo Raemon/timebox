@@ -1,0 +1,16 @@
+<template name="sidebarTabs">
+  <div class="sidebar">
+    <ul class="nav nav-tabs">
+      <li class="active menuTab"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
+      <li class="menuTab"><a href="#tracking" data-toggle="tab">Tracking</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="timeboxes">
+        {{> logTimeboxes}}
+      </div>
+      <div class="tab-pane fade" id="tracking">
+        {{> tracking}}
+      </div>
+    </div>
+  </div>
+</template>

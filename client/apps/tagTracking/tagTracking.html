@@ -1,0 +1,37 @@
+<template name="tracking">
+  <div class="tracking">
+    <div class="btn-group btn-timeframe"> 
+      <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
+        {{trackingTimeframe}} <span class="caret"></span>
+      </button>
+        <ul class="dropdown-menu">
+          <li class="timeframe"><a href="#">Today</a></li>
+          <li class="timeframe"><a href="#">7 Days</a></li>
+          <li class="timeframe"><a href="#">30 Days</a></li>
+          <li class="timeframe"><a href="#">All Time</a></li>
+        </ul>
+    </div>
+
+    <br><br>
+
+      Total Time: {{totalTime}}
+
+      {{#each timeframeTags}}
+        {{> tagData}}
+      {{/each}}
+
+  <!-- 
+    {{#each userTags}}
+      {{> tagData}}
+    {{/each}} 
+  -->
+  </div>
+</template> 
+
+          <template name="tagData">
+            <div class="tagData">
+                <b>{{this.tags}}</b><br>
+                 • Total Time: {{secondFormat this.timeSpent}}<br>
+                 • Total Timeboxes: {{this.timeboxesCompleted}}
+            </div>
+          </template>

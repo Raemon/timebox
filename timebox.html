@@ -13,18 +13,16 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
               {{> login}}
-
               {{#if userAddress}}
                 {{> sidebarTabs}}
               {{/if}}
-              
             </ul>
         </div>
 
         <!-- Page content -->
         <div id="page-content-wrapper">
           {{> header}}
-          {{> currentTimebox}}
+          {{> bigTimer}}
           {{> testing}}
         </div>
     </div>
@@ -34,186 +32,9 @@
   <h2 class="title">Get In the Zone</h2>
 </template>
 
-<template name="currentTimebox">
-  <div class="currentTimebox text-center">
-
-      <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
-      {{> setTimer}}
-
-
-      {{> timerButtons}}
-      <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
-  </div>
-  <script>
-    $("#tagsField").tagsInput();
-  </script>
-</template>
-
-          <template name="setTimer">
-            <div class="setTimer {{settingTimer}}">
-              <select class="timerSelect" id="minutesSelect" value="25">
-                {{#each range 59}}
-                  <option class="timerSelect" value="{{this}}">{{zfill this 2}}</option>
-                {{/each}}
-              </select>
-              :
-              <select class="timerSelect" id="secondsSelect" value="0">
-                {{#each range 59}}
-                  <option value="{{this}}">{{zfill this 2}}</option>
-                {{/each}}
-              </select>
-            </div>
-          </template>
-
-          <template name="timerButtons">
-            <div class="btn-group">
-              <button class="btn btn-large dropdown-toggle timer-set {{settingTimer}}" type="button" data-toggle="dropdown">
-                Set <span class="caret"></span>
-              </button>
-                <ul class="dropdown-menu">
-                  {{#if userDurations}}
-                    {{#each userDurations}}
-                      {{> durationSelect}}
-                    {{/each}}
-                    <hr>
-                  {{/if}}
-                  {{#each defaultDurations}}
-                    {{> durationSelect}}
-                  {{/each}}
-                </ul>
-            </div>
-            <div class="btn btn-large btn-primary timer-start ">Start</div>
-            <div class="btn btn-large btn-danger timer-stop">Stop</div>
-          </template>
-
-
-          <template name="durationSelect">
-            <li class="timeDuration">
-              <a href="#">
-                {{secondFormat this}}
-              </a>
-            </li>
-          </template>
-
-
-<template name="sidebarTabs">
-  <div class="sidebar">
-    <ul class="nav nav-tabs">
-      <li class="active menuTab"><a href="#timeboxes" data-toggle="tab">Timeboxes</a></li>
-      <li class="menuTab"><a href="#tracking" data-toggle="tab">Tracking</a></li>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane fade in active" id="timeboxes">
-        {{> timeboxes}}
-      </div>
-      <div class="tab-pane fade" id="tracking">
-        {{> tracking}}
-      </div>
-    </div>
-  </div>
-
-
-</template>
-
-<template name="tracking">
-  <div class="tracking">
-    <div class="btn-group btn-timeframe"> 
-      <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
-        {{trackingTimeframe}} <span class="caret"></span>
-      </button>
-        <ul class="dropdown-menu">
-          <li class="timeframe"><a href="#">Today</a></li>
-          <li class="timeframe"><a href="#">7 Days</a></li>
-          <li class="timeframe"><a href="#">30 Days</a></li>
-          <li class="timeframe"><a href="#">All Time</a></li>
-        </ul>
-    </div>
-
-    <br><br>
-
-      Total Time: {{totalTime}}
-
-      {{#each timeframeTags}}
-        {{> tagData}}
-      {{/each}}
-
-<!-- 
-    <h3>All Time</h3>
-    {{#each userTags}}
-      {{> tagData}}
-    {{/each}} -->
-  </div>
-</template> 
-
-          <template name="tagData">
-            <div class="tagData">
-                <b>{{this.tags}}</b><br>
-                 • Total Time: {{secondFormat this.timeSpent}}<br>
-                 • Total Timeboxes: {{this.timeboxesCompleted}}
-            </div>
-          </template>
-
-<template name="timeboxes"> 
-  {{#each userTimeboxes}}
-    {{> timeboxData}}
-  {{/each}}
-  <div class="btn-link text-center">
-    {{#if show_showMore}}
-      <a id="clickToShowMore" class="text-center">(Click to show more)</a>
-    {{/if}}
-    {{#if show_showFewer}}
-      <a id="clickToShowFewer" class="text-center">(Click to show fewer)</a>
-    {{/if}}
-  </div>
-</template>
-
-
-<template name="timeboxData">
-  <div id="timeboxData{{this._id}}" class="timebox {{create_date}}">
-      <div class="timeboxData_right">
-        <div class="btn btn-small timeboxDataButton repeatTimebox">
-          Repeat
-        </div><br>
-        <div class="btn btn-small timeboxDataButton deleteTimebox">
-          Delete
-        </div>
-      </div>
-      <div class="timeboxData_left">
-        <div class="timeboxDuration">
-          <span class="timebox{{complete}}">{{final_duration}}</span>{{duration}}
-        </div>
-        {{create_date}} - {{create_time}}<br>
-      </div><br><br>
-      <div class="timeboxData_tags">
-        {{#each tags}}
-          {{this}},
-        {{/each}}
-      </div>
-  </div>
-</template>
-
-<template name="tag">
-  <div class="tag">
-    {{this}}
-  </div>
-</template>
-
 <template name="testing">
   <div class="footer">
     {{> mochaTestReport}}
     {{> serverTestReport}}
   </div>
-</template>
-
-<template name="starfield">
-  <div id="starfield">
-  </div>
-  <script src="starfield.js"></script>
-  <script>
-
-  var container = document.getElementById('starfield');
-  var starfield = new Starfield();
-  starfield.initialise(container);
-  starfield.start();
-  </script>
 </template>

@@ -1,0 +1,54 @@
+<template name="bigTimer">
+  <div class="bigTimer text-center">
+      <div id="timer" class="timer {{settingTimer}}">{{timeRemaining}}</div> 
+      {{> setTimer}}
+      {{> timerButtons}}
+      <input class="text-center strong" name="tags" id="tagsField" value="uncategorized,"/>
+  </div>
+</template>
+
+          <template name="setTimer">
+            <div class="setTimer {{settingTimer}}">
+              <select class="timerSelect" id="minutesSelect" value="25">
+                {{#each range 59}}
+                  <option class="timerSelect" value="{{this}}">{{zfill this 2}}</option>
+                {{/each}}
+              </select>
+              :
+              <select class="timerSelect" id="secondsSelect" value="0">
+                {{#each range 59}}
+                  <option value="{{this}}">{{zfill this 2}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </template>
+
+          <template name="timerButtons">
+            <div class="btn-group">
+              <button class="btn btn-large dropdown-toggle timer-set {{settingTimer}}" type="button" data-toggle="dropdown">
+                Set <span class="caret"></span>
+              </button>
+                <ul class="dropdown-menu">
+                  {{#if userDurations}}
+                    {{#each userDurations}}
+                      {{> durationSelect}}
+                    {{/each}}
+                    <hr>
+                  {{/if}}
+                  {{#each defaultDurations}}
+                    {{> durationSelect}}
+                  {{/each}}
+                </ul>
+            </div>
+            <div class="btn btn-large btn-primary timer-start ">Start</div>
+            <div class="btn btn-large btn-danger timer-stop">Stop</div>
+          </template>
+
+
+          <template name="durationSelect">
+            <li class="timeDuration">
+              <a href="#">
+                {{secondFormat this}}
+              </a>
+            </li>
+          </template>

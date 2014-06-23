@@ -25,6 +25,7 @@ a {
     height: 100%;
     margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
 }
+
 .footer, .push {
     padding:10px;
     height: 155px; /* .push must be the same height as .footer */
@@ -35,7 +36,7 @@ body {
     background-color: black;
     /*background:repeating-linear-gradient(-35deg, #433333, #101010 500px, #101010 500px, #433333 500px);*/
 
-    background:repeating-linear-gradient(35deg, #000000, #322222);
+    background:repeating-linear-gradient(35deg, #000000, #544444);
     /*background-image:url('http://photojournal.jpl.nasa.gov/jpeg/PIA17016.jpg');*/
     background-attachment:fixed;
     overflow-y: scroll;
@@ -123,12 +124,17 @@ option.timerSelect{
 .timebox {
     background-color: rgba(255, 230, 200, .2);
     margin-top:2px;
-    padding:10px;
+    padding:8px;
+    padding-bottom:0px;
     min-height:80px;
     clear:both;
     text-align: left;
     font-size:12px;
     opacity:.4;
+}
+
+.current {
+  border:1px solid white;
 }
 
 .timebox.Today {
@@ -186,19 +192,60 @@ option.timerSelect{
   width:100%;
 }
 
+.timeboxData_tags {
+  word-wrap:none;
+  width:165px;
+  margin-top:3px;
+  margin-bottom:0px;
+}
+
 .tagData {
-  padding:10px;
+  padding:6px;
   line-height: 14px;
 }
 
-.tag {
+.timeboxDataTag {
   background-color:#221010;
-  padding:2px;
-  width:auto;
   font-size:10px;
+  padding:2px;
+  padding-left:3px;
+  float:left;
+  line-height:12px;
+  margin:1px;
 }
 
-.currentTimebox {
+.deleteTag {
+  font-size:9px;
+  padding:0px 3px 0px 3px;
+  color:#aaaaaa;
+  margin-left:2px;
+  cursor:pointer;
+}
+
+.addTag {
+  font-size:10px;
+  padding:2px 7px 3px 7px;
+  color:white;
+  margin-left:2px;
+  cursor:pointer;
+}
+
+.addTagField {
+  padding:1px;
+  font-size:10px;
+  height:0px;
+  visibility:hidden;
+  margin-top:3px;
+  background-color: rgba(255,255,255,.5);
+}
+
+.addTagField.addingTag {
+  height:18px;
+  width:120px;
+  visibility:visible;
+}
+
+.bigTimer {
     color:grey;
     width:100%;
 

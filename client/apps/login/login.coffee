@@ -1,4 +1,4 @@
-# https://waaave.com/tutorial/meteor/design-a-complete-authentication-system-with-meteor/
+  # https://waaave.com/tutorial/meteor/design-a-complete-authentication-system-with-meteor/
 
 trimInput = (value) ->
   value.replace(/^\s*|\s*$/g, '');

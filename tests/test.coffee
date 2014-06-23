@@ -13,34 +13,40 @@ describe "Collections", ->
         timebox = Timeboxes.findOne(timeboxID)
         chai.assert.equal timebox.duration, 5*60
         testReset(timeboxID)
-#       it "has startTime", ->
-#         date = new Date()
-#         timeboxID = startTimebox 5*60
-#         timebox = Timeboxes.findOne(timeboxID)
-#         chai.assert.equal timebox.startTime.getSeconds, date.getSeconds
-#         testReset(timeboxID)
-#       it "timebox is incomplete", ->
-#         timeboxID = startTimebox 5*60
-#         timebox = Timeboxes.findOne(timeboxID)
-#         chai.assert.equal timebox.complete, false
-#         testReset(timeboxID)
-#       it "can read currentTimebox", ->
-#         timeboxID = startTimebox 5*60
-#         currentTimeboxID = Session.get("currentTimeboxID")
-#         chai.assert.equal timeboxID, currentTimeboxID
-#         testReset(timeboxID)
-#       it "appears in Timebox Log", ->
-#         timeboxID = startTimebox 5*60
-#         timeboxDiv = document.getElementById("timeboxData"+timeboxID)
-#         chai.expect(timeboxDiv).to.be.ok
-#         testReset(timeboxID)
-#       it "assigns the current user or creates a new one", ->
-#         timeboxID = startTimebox 5*60
-#         timebox = Timeboxes.findOne(timeboxID)
-#         chai.assert.equal timebox.userID, Meteor.userId()
-#         chai.expect(timebox.userID).to.be.ok
-#         chai.expect(Meteor.userId).to.be.ok
-#         testReset(timeboxID)
+      it "has startTime", ->
+        date = new Date()
+        timeboxID = startTimebox()
+        timebox = Timeboxes.findOne(timeboxID)
+        chai.assert.equal timebox.startTime.getSeconds, date.getSeconds
+        testReset(timeboxID)
+      it "timebox is incomplete", ->
+        timeboxID = startTimebox()
+        timebox = Timeboxes.findOne(timeboxID)
+        chai.assert.equal timebox.complete, "In Progress"
+        testReset(timeboxID)
+      it "can read currentTimebox()", ->
+        timeboxID = startTimebox()
+        currentTimeboxID = currentTimebox()._id
+        chai.assert.equal timeboxID, currentTimeboxID
+        testReset(timeboxID)
+      it "appears in Timebox Log", ->
+        setTimer_and_countdown 5*60*9
+        timeboxID = startTimebox()
+        div = document.createElement("div")
+        UI.insert(UI.render(Template.logTimeboxes), div)
+        document.body.insertBefore(div, document.body.childNodes[0])
+        doc = document.getElementById("timeboxData" + timeboxID)
+        chai.expect(doc).to.be.ok
+        div.parentNode.removeChild(div)
+        testReset(timeboxID)
+      it "assigns the current user", ->
+        timeboxID = startTimebox 5*60
+        timebox = Timeboxes.findOne(timeboxID)
+        chai.assert.equal timebox.userID, Meteor.userId()
+        chai.expect(timebox.userID).to.be.ok
+        chai.expect(Meteor.userId()).to.be.ok
+        testReset(timeboxID)
+
 
 #     describe "On completeTimebox", ->
 
@@ -99,8 +105,8 @@ describe "Collections", ->
 #     it "timer exists", ->
 #       timer = document.getElementById("timer")
 
-describe "TestingEndConditions", ->
-  describe "Collections", ->
-    it "has X timeboxes", ->
-      Timeboxes.find().count() = timeboxCount
+# describe "TestingEndConditions", ->
+#   describe "Collections", ->
+#     it "has X timeboxes", ->
+#       chai.assert.equal Timeboxes.find().count() == timeboxCount
 
