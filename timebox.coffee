@@ -27,10 +27,15 @@ root = global ? window
 Timeboxes = new Meteor.Collection("Timeboxes");
 Tags = new Meteor.Collection("Tags")
 
+#Empire Collections
+Characters = new Meteor.Collection("Characters")
+
 
 if root.Meteor.isClient
 
   countdown = 1500
+  previous_countdownTime = 0
+  new_countdownTime = 0
   Session.set("currentUserID", undefined)
   Session.set("timeboxLimit", 8)
   Session.set("trackingTimeframe", "Today")
@@ -85,6 +90,7 @@ if root.Meteor.isClient
 
   startTimebox = () ->
     interruptCounter()
+    document.getElementById("empireMessages").style.opacity = 0
     setCountdown_fromTimer()
     Session.set("timeRemaining", secondFormat(countdown))
     # if Users.findOne(Session.get("currentUserID")) == undefined
@@ -102,6 +108,9 @@ if root.Meteor.isClient
     Session.set("currentTimeboxID", timeboxID)
     timeboxID
 
+
+
+
   completeTimebox = () ->
     timebox = currentTimebox()
     interruptCounter()
@@ -116,6 +125,7 @@ if root.Meteor.isClient
             tags: tags
           }
         }
+    completeJourney(timebox.duration)
     Session.set("currentTimeboxID", undefined)
     timebox._id
 
@@ -150,19 +160,24 @@ if root.Meteor.isClient
           Tags.update(tagID, { $set: {active: true}})
     tagNames()
 
-  trackingDate = (string) ->
+  trackingStartDate = (string) ->
     date = new Date().setHours(0,0,0,0)
     if string == "Today"
-      return date
+      return [date, new Date()]
+    if string == "Yesterday"
+      return  [date - 1000*60*60*24*1, date]
     if string == "7 Days"
-      return date - 1000*60*60*24*7
+      return [date - 1000*60*60*24*7, new Date()]
     if string == "30 Days"
-      return date - 1000*60*60*24*30
+      return [date - 1000*60*60*24*30, new Date()]
+    if string == "One Year"
+      return [date - 1000*60*60*24*365, new Date()]
 
   updateTagTracking = () ->
-    date = trackingDate(Session.get("trackingTimeframe"))
+    dates = trackingStartDate(Session.get("trackingTimeframe"))
     timeboxes = Timeboxes.find({userID: Meteor.userId()}, { sort: {startTime: -1}}).fetch()
-    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > date)
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > dates[0])
+    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime < dates[1])
     tagStrings = {}
     for timebox in timeboxes
       if !tagStrings[timebox.tags.sort().toString()]
@@ -183,16 +198,23 @@ if root.Meteor.isClient
 
   timer = () ->
     if timerRunning
-      countdown -= 1;
+      # to prevent small variations in the elapsed time, measures the current Date against the last 
+      # countdown's Date(). This should usually about 1 second
+      new_countdownTime = new Date()
+      countdown -= (new_countdownTime - previous_countdownTime)/1000
+      console.log((new_countdownTime - previous_countdownTime)/1000)
+      console.log countdown
+      previous_countdownTime = new_countdownTime
+      # countdown -= 1;
       if countdown >= 0
         Session.set("timeRemaining", secondFormat(countdown))
         document.title = secondFormat(countdown)
         Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration - countdown}})
         updateTagTracking()
-      if countdown == 0
+      if countdown < 0
         completeTimebox(Session.get("currentTimeboxID")) 
-        if Meteor.user().emails[0].address == "raemon777@gmail.com"
-          alert("You have left the zone")
+        # if Meteor.user().emails[0].address == "raemon777@gmail.com"
+        alert("You have left the zone")
         audio = new Audio "cChord.mp3"
         audio.play()
 
@@ -274,12 +296,14 @@ if root.Meteor.isClient
     countdown = 0
     countdown += parseInt(document.getElementById("minutesSelect").value) * 60
     countdown += parseInt(document.getElementById("secondsSelect").value)
+    previous_countdownTime = new Date()
     Session.set("timeRemaining", secondFormat(countdown))
 
   setTimer_and_countdown = (seconds) ->
     document.getElementById("minutesSelect").value = parseInt(seconds/60).toString()
     document.getElementById("secondsSelect").value = parseInt(seconds%60).toString()
     countdown = seconds
+    previous_countdownTime = new Date()
     Session.set("timeRemaining", secondFormat(countdown))
 
   root.Template.timeboxData.current = ->
@@ -528,6 +552,7 @@ if root.Meteor.isServer
 
 root.currentTimebox = currentTimebox
 root.Timeboxes = Timeboxes
+root.Characters = Characters
 root.startTimebox = startTimebox
 root.completeTimebox = completeTimebox
 root.secondFormat = secondFormat

@@ -1,0 +1,31 @@
+.characterSheet {
+    background-color: rgba(255, 230, 200, .2);
+    margin:0px 0px 20px 0px;
+    padding:8px 8px 12px 8px;
+    clear:both;
+    text-align: left;
+    font-size:12px;
+}
+
+.characterNameLabel {
+	font-size:10px;
+	opacity:.5;
+}
+.characterName {
+	font-size:14px;
+	font-weight:900;
+}
+
+#empireMessages {
+    white-space:pre-line;
+    word-wrap:break-word;
+    font-style:italic;
+    color:#BBBCAA;
+}
+
+.fade {
+   opacity: 1;
+   transition: opacity 2s ease-in-out;
+   -moz-transition: opacity 2s ease-in-out;
+   -webkit-transition: opacity 2s ease-in-out;
+}

@@ -226,7 +226,6 @@ option.timerSelect{
   font-size:10px;
   padding:2px 7px 3px 7px;
   color:white;
-  margin-left:2px;
   cursor:pointer;
 }
 
@@ -243,6 +242,7 @@ option.timerSelect{
   height:18px;
   width:120px;
   visibility:visible;
+  margin-bottom:7px;
 }
 
 .bigTimer {
@@ -299,7 +299,7 @@ option.timerSelect{
 
 #page-content-wrapper {
     width: 100%;
-    padding-top:20%;
+    padding-top:10%;
 }
 
 .sidebar-nav {
