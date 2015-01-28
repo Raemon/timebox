@@ -1,15 +1,62 @@
+<template name="empireTab">
+  <div class="empireTab">
+    {{#if empireActivated}}
+      {{#if empireUpToDate}}
+        {{> characterSheet}}
+        {{> buildings}}
+      {{/if}}
+    {{/if}}
+    {{#unless empireUpToDate}}
+      {{#unless empireActivated}}
+        Want to gamify the experience?<br>
+        <a id="activateCharacter">Activate Task Empire</a>
+      {{/unless}}
+      {{#if empireActivated}}
+        Your character's out of date<br>
+        <a id="updateCharacter">Update Character</a>
+      {{/if}}
+    {{/unless}}
+  </div>
+</template>
+
 <template name="characterSheet">
   <div class="characterSheet">
     <div>
       <div class="characterNameLabel">Character Name:</div>
-      <div class="characterName">{{characterName}}</div>
+      <div id="characterName">{{character.name}}</div>
     </div>
-    {{#if wood}}
-      Wood: {{wood}}
-    {{/if}}
-    {{#if stone}}
-      Stone: {{stone}}
-    {{/if}}
+    <div>
+      {{#each arrayify stats}}
+        {{this}}
+      {{/each}}
+      {{#if stats.journeys}}
+        Journeys: {{stats.journeys}}<br>
+      {{/if}}
+      {{#if stats.wood}}
+        Wood: {{stats.wood}}<br>
+      {{/if}}
+      {{#if stats.stone}}
+        Stone: {{stats.stone}}<br>
+      {{/if}}
+      {{#if stats.iron}}
+        Iron: {{stats.iron}}<br>
+      {{/if}}
+      {{#if stats.gold}}
+        Gold: {{stats.gold}}<br>
+      {{/if}}
+      <br>
+      {{#if stats.huts}}
+        Huts: {{stats.huts}}<br>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="buildings">
+  <div class="buildings">
+    <div class="buildHut {{enoughWood 30}}">
+      Build a Hut
+    </div>
   </div>
 </template>
 

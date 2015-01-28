@@ -7,13 +7,33 @@
     font-size:12px;
 }
 
+.buildings {
+    background-color: rgba(255, 230, 200, .2);
+    margin:0px 0px 20px 0px;
+    padding:8px 8px 12px 8px;
+    clear:both;
+    text-align: left;
+    font-size:12px;
+}
+
+.buildHut {
+  opacity:1;
+  background-color: rgba(255, 230, 200, .5);
+  padding:5px;
+}
+
+.buildHut.notEnough {
+  opacity:.5;
+}
+
 .characterNameLabel {
 	font-size:10px;
 	opacity:.5;
 }
-.characterName {
+#characterName {
 	font-size:14px;
 	font-weight:900;
+  padding-bottom:5px;
 }
 
 #empireMessages {
@@ -21,6 +41,8 @@
     word-wrap:break-word;
     font-style:italic;
     color:#BBBCAA;
+    position:relative;
+    top:-50px;
 }
 
 .fade {

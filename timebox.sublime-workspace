@@ -1,0 +1,941 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"curren",
+				"currentCharacter"
+			],
+			[
+				"empir",
+				"empireMessages"
+			],
+			[
+				"character",
+				"characterName"
+			],
+			[
+				"tas",
+				"task_type"
+			],
+			[
+				"journe",
+				"journeys"
+			],
+			[
+				"jour",
+				"journeys"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"airship",
+				"airship_C"
+			],
+			[
+				"sql",
+				"sqlalchemy"
+			],
+			[
+				"user",
+				"user_info"
+			],
+			[
+				"new",
+				"new_timestamp"
+			],
+			[
+				"track",
+				"track"
+			],
+			[
+				"current",
+				"currentTimebox"
+			],
+			[
+				"bac",
+				"background"
+			],
+			[
+				"currentT",
+				"currentTimebox"
+			],
+			[
+				"curr",
+				"currentTimebox"
+			],
+			[
+				"currentTime",
+				"currentTimeboxID"
+			],
+			[
+				"un",
+				"updateTagTracking"
+			],
+			[
+				"start",
+				"startTime"
+			],
+			[
+				"timeboxes",
+				"timeboxesCompleted"
+			],
+			[
+				"distin",
+				"distinctValues"
+			],
+			[
+				"last",
+				"latestTimebox"
+			],
+			[
+				"timeb",
+				"timeboxesCompleted"
+			],
+			[
+				"seconds",
+				"secondsTimer"
+			],
+			[
+				"Start",
+				"startTimebox"
+			],
+			[
+				"main",
+				"margin"
+			],
+			[
+				"sec",
+				"secondFormat"
+			],
+			[
+				"time",
+				"timeRemaining"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"forgot",
+				"forgottenPassword"
+			],
+			[
+				"border",
+				"border-radius"
+			],
+			[
+				"compl",
+				"completeTimebox"
+			],
+			[
+				"bord",
+				"border-radius"
+			],
+			[
+				"r",
+				"rgba()"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"timer",
+				"timer"
+			],
+			[
+				"font-",
+				"font-size"
+			],
+			[
+				"size",
+				"font-size"
+			],
+			[
+				"an",
+				"analyserNode"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "'''\nTodos\n\nCreate Readme for Github\ntest if clicking start creates the right timer\nBegin a break timer after a work timer\n\nToggleable Alert-at-end-of-timebox\n\nDone:\n\n  Basic Tracking\n    How many timers in a row you've done today\n\n    total time spent todayday\n\n    create dropdown menu for recently used timer-settings\n    Begin with tags from currentTimebox\n    total time spend on a tag\n    total timeboxes done on a tag\n    Create tab-structure\n\n\n'''\n\nroot = global ? window\nempire = {}\nTimeboxes = new Meteor.Collection(\"Timeboxes\");\nTags = new Meteor.Collection(\"Tags\")\n\n#Empire Collections\nCharacters = new Meteor.Collection(\"Characters\")\nCharacters = new Meteor.Collection(\"Characters\")\n\n\nif root.Meteor.isClient\n\n  countdown = 1500\n  previous_countdownTime = 0\n  new_countdownTime = 0\n  Session.set(\"currentUserID\", undefined)\n  Session.set(\"timeboxLimit\", 8)\n  Session.set(\"trackingTimeframe\", \"Today\")\n  timerRunning = false\n\n  fixThings = () ->\n    for timebox in Timeboxes.find().fetch()\n      if timebox.duration && timebox.final_duration\n        if timebox.duration == timebox.final_duration\n          Timeboxes.update(timebox._id, { $set: {complete: \"Completed\"}})\n        else\n          Timeboxes.update(timebox._id, { $set: {complete: \"Partial\"}})\n      else\n        Timeboxes.update(timebox._id, { $set: {complete: \"Completed\"}})\n      updateTags(timebox)\n\n  secondFormat = (seconds) ->\n    hours = parseInt(seconds/3600).toString()\n    if hours != \"0\"\n      if hours.length < 2\n        minutes = \"0\" + minutes\n      hours += \":\"\n    else\n      hours = \"\"\n    minutes = parseInt((seconds%3600)/60).toString()\n    if minutes.length < 2\n      minutes = \"0\" + minutes\n    minutes += \":\"\n    seconds = parseInt((seconds%3600)%60).toString()\n    if seconds.length < 2\n      seconds = \"0\" + seconds\n    hours + minutes + seconds\n\n  currentTimebox = () ->\n    if Session.get(\"currentTimeboxID\")\n      return Timeboxes.findOne(Session.get(\"currentTimeboxID\"))\n    else\n      return undefined\n\n  interruptCounter = () ->\n    if currentTimebox()\n      if countdown != 0\n        complete = \"Partial\"\n      else\n        complete = \"Completed\"\n      Timeboxes.update currentTimebox()._id, \n          {$set: \n            {\n              complete: complete,\n            }\n          }\n\n  startTimebox = () ->\n    interruptCounter()\n    document.getElementById(\"empireMessages\").style.opacity = 0\n    setCountdown_fromTimer()\n    Session.set(\"timeRemaining\", secondFormat(countdown))\n    # if Users.findOne(Session.get(\"currentUserID\")) == undefined\n    #   createUser('TemporaryUser')\n    timeboxID = Timeboxes.insert {\n      userID: Meteor.userId(),\n      duration: countdown,\n      final_duration: 0,\n      startTime: new Date(),\n      endTime: undefined,\n      complete: \"In Progress\",\n      tags: $(\"#tagsField\").val().split(\",\"),\n    }\n    timerRunning = true\n    Session.set(\"currentTimeboxID\", timeboxID)\n    timeboxID\n\n\n\n\n  completeTimebox = () ->\n    timebox = currentTimebox()\n    interruptCounter()\n    timerRunning = false\n    setTimer_and_countdown(timebox.duration)\n    updateTags(timebox)\n    document.title = secondFormat(countdown)\n    tags = $(\"#tagsField\").val().split(\",\")\n    Timeboxes.update timebox._id, \n        {$set: \n          {\n            tags: tags\n          }\n        }\n    Session.set(\"currentTimeboxID\", undefined)\n    timebox._id\n\n  tagNames = () ->\n    if Meteor.user()\n      tags = Tags.find({userID: Meteor.userId()}).fetch();\n      tags = _.pluck(tags, \"name\")\n      $( \"#tagsField_tag\" ).autocomplete({\n        source: tags\n      });\n\n  updateTags = (timebox) ->\n    if timebox.tags\n      for tag in timebox.tags\n        if tag.length > 0\n          newTag = Tags.findOne({name: tag, userID: timebox.userID})\n          if newTag == undefined\n            tagID = Tags.insert({\n              name: tag,\n              userID: timebox.userID,\n              timeSpent: 0,\n              timeboxesCompleted: 0,\n              active: true,\n            })\n          else \n            tagID = newTag._id\n          if timebox.final_duration\n            time = timebox.final_duration\n          else\n            time = 0\n          Tags.update(tagID, { $inc: {timeSpent: time, timeboxesCompleted: 1}})\n          Tags.update(tagID, { $set: {active: true}})\n    tagNames()\n\n  trackingStartDate = (string) ->\n    date = new Date().setHours(0,0,0,0)\n    if string == \"Today\"\n      return [date, new Date()]\n    if string == \"Yesterday\"\n      return  [date - 1000*60*60*24*1, date]\n    if string == \"7 Days\"\n      return [date - 1000*60*60*24*7, new Date()]\n    if string == \"30 Days\"\n      return [date - 1000*60*60*24*30, new Date()]\n    if string == \"One Year\"\n      return [date - 1000*60*60*24*365, new Date()]\n\n  updateTagTracking = () ->\n    dates = trackingStartDate(Session.get(\"trackingTimeframe\"))\n    timeboxes = Timeboxes.find({userID: Meteor.userId()}, { sort: {startTime: -1}}).fetch()\n    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > dates[0])\n    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime < dates[1])\n    tagStrings = {}\n    for timebox in timeboxes\n      if !tagStrings[timebox.tags.sort().toString()]\n        tagStrings[timebox.tags.sort().toString()] = {}\n        tagStrings[timebox.tags.sort().toString()]['tags'] = timebox.tags.toString()\n        tagStrings[timebox.tags.sort().toString()]['timeSpent'] = 0\n        tagStrings[timebox.tags.sort().toString()]['timeboxesCompleted'] = 0\n      tagStrings[timebox.tags.toString()]['timeSpent'] += timebox.final_duration\n      if timebox.duration == timebox.final_duration\n        tagStrings[timebox.tags.sort().toString()]['timeboxesCompleted'] += 1\n    Session.set(\"tagTracking\", _.toArray(tagStrings))\n      \n  testReset = (timeboxID) ->\n    Timeboxes.remove(timeboxID)\n    countdown = 0\n    timerRunning = false\n    Session.set(\"timeRemaining\", secondFormat(countdown))\n\n  timer = () ->\n    if timerRunning\n      # to prevent small variations in the elapsed time, measures the current Date against the last \n      # countdown's Date(). This should usually about 1 second\n      new_countdownTime = new Date()\n      countdown -= (new_countdownTime - previous_countdownTime)/1000\n      console.log((new_countdownTime - previous_countdownTime)/1000)\n      console.log countdown\n      previous_countdownTime = new_countdownTime\n      # countdown -= 1;\n      if countdown >= 0\n        Session.set(\"timeRemaining\", secondFormat(countdown))\n        document.title = secondFormat(countdown)\n        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration - countdown}})\n        updateTagTracking()\n      if countdown < 0\n        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration}})\n        completeJourney(currentTimebox().duration)\n        completeTimebox(Session.get(\"currentTimeboxID\")) \n        # if Meteor.user().emails[0].address == \"raemon777@gmail.com\"\n        alert(\"You have left the zone\")\n        audio = new Audio \"cChord.mp3\"\n        audio.play()\n\n      countdown\n\n\n\n  setInterval () -> \n      timer()\n    , 1000\n\n  #helper functions\n  zfill = (string, n) ->\n    string = string.toString()\n    while string.length < n\n      string = \"0\" + string\n    string\n\n  Handlebars.registerHelper \"timeRemaining\", () ->\n    Session.get(\"timeRemaining\")\n\n  Handlebars.registerHelper \"arrayify\", (object) ->\n    array = []\n    for key in object\n      array.push(key) \n    array\n    \n  Handlebars.registerHelper \"currentTimebox\", () ->\n    Timeboxes.findOne(Session.get(\"currentTimeboxID\"))\n\n  Handlebars.registerHelper \"range\", (n) ->\n    _.range(59)\n\n  Handlebars.registerHelper \"zfill\", (string, n) ->\n    zfill(string, n)\n\n  Handlebars.registerHelper \"userAddress\", () ->\n    if Meteor.user()\n      if Meteor.user().emails\n        Meteor.user().emails[0].address\n    else\n      undefined\n\n  Handlebars.registerHelper \"secondFormat\", (seconds) ->\n    return secondFormat(seconds)\n\n  Handlebars.registerHelper \"userTimeboxes\", () ->\n    timeboxLimit = Session.get(\"timeboxLimit\")\n    Timeboxes.find({userID: Meteor.userId()}, {sort: {startTime: -1}, limit: timeboxLimit}).fetch()\n  \n  Handlebars.registerHelper \"userDurations\", () ->\n    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch();\n    distinctArray = _.uniq(timeboxes, false, (d) -> return d.duration);\n    distinctValues = _.pluck(distinctArray, 'duration')\n    if distinctValues.length \n      return distinctValues\n    else\n      false\n\n  Handlebars.registerHelper \"defaultDurations\", () ->\n    [30, 60, 300,600,900,1200,1500,1800, 3]\n\n  Handlebars.registerHelper \"date\", (date) ->\n    date.getDate()\n\n  Handlebars.registerHelper \"time\", (date) ->\n    date.getTime()\n\n  Handlebars.registerHelper \"isRay\", () ->\n    if Meteor.user()\n      Meteor.user().emails[0].address == \"raemon777@gmail.com\"\n    else\n      false\n\n  Handlebars.registerHelper \"settingTimer\", () ->\n    Session.get(\"settingTimer\")\n\n  timerUneditable = () ->\n    document.getElementById(\"secondsTimer\").contentEditable = false\n    document.getElementById(\"minutesTimer\").contentEditable = false\n\n\n\n  setCountdown_fromTimer = ()->\n    countdown = 0\n    countdown += parseInt(document.getElementById(\"minutesSelect\").value) * 60\n    countdown += parseInt(document.getElementById(\"secondsSelect\").value)\n    previous_countdownTime = new Date()\n    Session.set(\"timeRemaining\", secondFormat(countdown))\n\n  setTimer_and_countdown = (seconds) ->\n    document.getElementById(\"minutesSelect\").value = parseInt(seconds/60).toString()\n    document.getElementById(\"secondsSelect\").value = parseInt(seconds%60).toString()\n    countdown = seconds\n    previous_countdownTime = new Date()\n    Session.set(\"timeRemaining\", secondFormat(countdown))\n\n  root.Template.timeboxData.current = ->\n    if currentTimebox()\n      if this._id == currentTimebox()._id\n        return \"current\"\n      else\n        return undefined\n\n  root.Template.timeboxData.events\n    \"click .repeatTimebox\": () ->\n      $('#tagsField').importTags('')\n      if this.tags\n        for tag in this.tags\n          $(\"#tagsField\").addTag(tag)\n      else\n        $(\"#tagsField\").addTag(\"uncategorized\")\n      setTimer_and_countdown(this.duration)\n      startTimebox()\n\n    \"click .deleteTimebox\": () ->\n      Timeboxes.remove(this._id)\n\n    \"click .addTag\": ()->\n      Session.set(\"addingTag\" + this._id, \"addingTag\")\n      $(\"#addTag\" + this._id).focus()\n\n    \"click .deleteTag\": (e) ->\n      timeboxID = e.target.parentElement.parentElement.id\n      tag = e.target.parentElement.innerHTML.trim().split(\" \")[0]\n      Timeboxes.update(timeboxID, { $pull: { tags: tag}})\n      if currentTimebox()\n        if currentTimebox()._id == timeboxID\n          $(\"#tagsField\").removeTag(tag)\n\n    \"keydown .addTagField\": (e)->\n      if e.which == 13\n        if e.target.value.trim() != \"\"\n          Timeboxes.update(this._id, { $addToSet: { tags: e.target.value}})\n          if currentTimebox()\n            if currentTimebox()._id == this._id\n              $(\"#tagsField\").addTag(e.target.value.trim())\n        e.target.value = \"\"\n        Session.set(\"addingTag\" + this._id, undefined)\n\n    \"focusout .addTagField\": (e)->\n      Session.set(\"addingTag\" + this._id, undefined)\n      e.target.value = \"\"\n\n  root.Template.login.loginError = () ->\n    return Session.get(\"loginError\")\n\n  root.Template.tracking.events\n    \"click .timeframe\": (e) ->\n      Session.set(\"trackingTimeframe\", e.target.innerHTML)\n      updateTagTracking()\n\n  root.Template.tracking.trackingTimeframe = () ->\n    Session.get(\"trackingTimeframe\")\n\n\n  root.Template.tracking.timeframeTags = () ->\n    Session.get(\"tagTracking\")\n\n\n  root.Template.tracking.userTags = () ->\n    Tags.find({\n      userID: Meteor.userId(), \n      timeboxesCompleted: { $gt: 1}, \n      timeSpent: { $gt: 1},\n      active: true\n    })\n\n\n  root.Template.tracking.totalTime = () ->\n    today = new Date().setHours(0,0,0,0)\n    timeboxes = Timeboxes.find({userID: Meteor.userId()}).fetch()\n    timeboxes = _.filter(timeboxes, (timebox) -> timebox.startTime > today)\n    totalTime = 0\n    timeboxes.forEach((timebox, index, array) -> totalTime += timebox.final_duration)\n    secondFormat(totalTime)\n\n\n  root.Template.tagData.totalTime = () ->\n    secondFormat(this.timeSpent) \n\n  root.Template.timeboxData.create_date = () ->\n    timeboxDateStr = moment(this.startTime).format(\"MM/DD/YYYY\")\n    todayDate = new Date()\n    if timeboxDateStr == moment(todayDate).format(\"MM/DD/YYYY\")\n      return \"Today\"\n\n    return timeboxDateStr\n\n  root.Template.timeboxData.create_time = () ->\n    moment(this.startTime).format(\"h:mm A\")\n  root.Template.timeboxData.duration = () ->\n    secondFormat(this.duration)\n  root.Template.timeboxData.final_duration = () ->\n    if this.final_duration\n      secondFormat(this.final_duration) + \" / \"\n  root.Template.timeboxData.addingTag = () ->\n    Session.get(\"addingTag\" + this._id)\n\n  root.Template.timeboxData.complete = () ->\n    if this.duration != this.final_duration\n      \"Incomplete\"\n    else\n      \"Completed\"\n\n  root.Template.timeboxData.bgcolor = () ->\n    if this.tags.toString()\n      tagString = this.tags.toString()\n\n  root.Template.timeboxData.rendered = () ->\n    startDate = moment(this.data.startTime).format(\"MMDDYYYY\")\n    todayDate = moment(new Date()).format(\"MMDDYYYY\")\n\n    if startDate == todayDate\n      alpha = \".25\"\n    else\n      alpha = \".1\"\n    color = \"200, 200, 200, \"\n    if this.data.tags\n      if this.data.tags.toString()\n        tagString = this.data.tags.toString()\n        if tagString.match(/[aeiou]/)\n          tagLetter = tagString.match(/[aeiou]/)[0]\n          if tagLetter == \"a\"\n            color = \"255, 150, 150, \"\n          if tagLetter == \"e\"\n            color = \"150, 200, 150, \"\n          if tagLetter == \"i\"\n            color = \"255, 200, 150, \"\n          if tagLetter == \"o\"\n            color = \"150, 150, 255, \"\n          if tagLetter == \"u\"\n            color = \"255, 150, 255, \"\n\n    this.lastNode.setAttribute(\"style\", \"background-color:rgba(\" + color + alpha + \");\")\n\n  Template.bigTimer.rendered = () ->\n      countdown = 1500\n      document.getElementById(\"minutesSelect\").value = \"25\"\n      Session.set(\"timeRemaining\", secondFormat(countdown))\n      $(\"#tagsField\").tagsInput \n        onChange: (tag) ->\n          if currentTimebox()\n            Timeboxes.update(currentTimebox()._id, { $set: { tags: $(\"#tagsField\").val().split(\",\")}})\n\n  root.Template.bigTimer.editing = () ->\n      return Session.get(\"timerEditing\")\n\n  root.Template.bigTimer.events\n    \"click\": () ->\n      tagNames()\n\n    \"click #minutesTimer\" : (e) ->\n      Session.set(\"timerEditing\", \"editing minutes\")\n\n    \"keydown #secondsTimer\" : (e) ->\n      seconds = document.getElementById(\"secondsTimer\")\n      minutes = document.getElementById(\"minutesTimer\")\n      if e.which >= 48 && e.which <=57\n        if seconds.value.toString().length >= 2\n          minutes.focus()\n\n  root.Template.timerButtons.events\n    \"click .timer-set\": () ->\n      if Session.equals(\"settingTimer\", undefined)\n        timerRunning = false\n        Session.set(\"settingTimer\", \"settingTimer\")\n        document.getElementById(\"minutesSelect\").value = parseInt(countdown / 60).toString()\n        document.getElementById(\"secondsSelect\").value = parseInt(countdown % 60).toString()\n      else\n        Session.set(\"settingTimer\", undefined)\n        setCountdown_fromTimer()\n\n    \"click .timer-start\": () ->\n      if Session.equals(\"settingTimer\", undefined)\n        startTimebox()\n      else\n        Session.set(\"settingTimer\", undefined)\n        setCountdown_fromTimer()\n        startTimebox()\n    \"click .timer-stop\": () ->\n      Session.set(\"settingTimer\", undefined)\n      setCountdown_fromTimer()\n      completeTimebox()\n\n  root.Template.durationSelect.events\n    \"click\": () ->\n      Session.set(\"settingTimer\", undefined)\n      setTimer_and_countdown(this)\n\n  Template.logTimeboxes.events\n    \"click #clickToShowMore\": () ->\n      timeboxLimit = Session.get(\"timeboxLimit\")\n      Session.set(\"timeboxLimit\", timeboxLimit+100)\n\n    \"click #clickToShowFewer\": () ->\n      timeboxLimit = Session.get(\"timeboxLimit\")\n      if timeboxLimit > 100\n        Session.set(\"timeboxLimit\", timeboxLimit-100)\n\n\n\n\n\n  Template.logTimeboxes.show_showMore = () ->\n    timeboxes = Timeboxes.find({userID: Meteor.userId()})\n\n    timeboxes.count() > Session.get(\"timeboxLimit\")\n\n  Template.logTimeboxes.show_showFewer = () ->\n    Session.get(\"timeboxLimit\") > 100\n\n  Template.logTimeboxes.rendered = () ->\n    if Meteor.user()\n      $('#tagsField').importTags('')\n      if currentTimebox()\n        for tag in currentTimebox().tags\n          $(\"#tagsField\").addTag(tag)\n      else\n        $(\"#tagsField\").addTag('uncategorized')\n      if Meteor.user().emails[0].address == \"raemon777@gmail.com\"\n        console.log(Meteor.users.find().fetch())\n\n  Template.tracking.rendered = () ->\n    updateTagTracking()\n\n\n\nif root.Meteor.isServer\n  if exports? then root = exports\n  if window? then root = window\n  Meteor.publish \"Tags\", ->\n    Employees.find {}\n\n\n\n\n\n\nroot.currentTimebox = currentTimebox\nroot.Timeboxes = Timeboxes\nroot.Characters = Characters\nroot.startTimebox = startTimebox\nroot.completeTimebox = completeTimebox\nroot.secondFormat = secondFormat\nroot.setTimer_and_countdown = setTimer_and_countdown\nroot.timer = timer\nroot.testReset = testReset\n\nconsole.log(root)\n\n\n\n\n",
+			"file": "timebox.coffee",
+			"file_size": 17367,
+			"file_write_time": 1422410744000000,
+			"settings":
+			{
+				"buffer_size": 17417,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "apps/empire/client/empire.js",
+			"settings":
+			{
+				"buffer_size": 4675,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "timebox.html",
+			"settings":
+			{
+				"buffer_size": 900,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "apps/empire/client/empire.html",
+			"settings":
+			{
+				"buffer_size": 1626,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "apps/empire/client/empire.coffee",
+			"settings":
+			{
+				"buffer_size": 3762,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/apps/sidebar/sidebar.html",
+			"settings":
+			{
+				"buffer_size": 550,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/apps/bigTimer/bigTimer.html",
+			"settings":
+			{
+				"buffer_size": 1978,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "timebox.css",
+			"settings":
+			{
+				"buffer_size": 5622,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "apps/empire/client/empire.css",
+			"settings":
+			{
+				"buffer_size": 931,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 387.0,
+		"selected_items":
+		[
+			[
+				"gith",
+				"GitHub: History"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/main.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/main.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/models.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/habitfetch.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/empire_short/empire.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/bigTimer/bigTimer.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/sidebar/sidebar.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/tagTracking/tagTracking.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/login/login.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/habitFetch.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/habitFetch.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/By Your Side",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/sqlAlchemyTest.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/settings.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/__init__.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/habitrpg_api.py",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/webProject/habitica_data/habitFetch.py",
+		"/Users/raymondarnold/Dropbox/HumanistCulture/Blogposts/Ecstatic Dance",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Wedding/Lindsey",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/empire.js",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/makeyMusic/makeyMusic.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/user_info.py",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/makeyMusic/makeyMusic_v02.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Self Improvement/Feelings Journal",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Web Projects/habitica_data/habitica_data.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/songlayerTest/songlayerTest.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Web Projects/habitica_data/habitShell.sh",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Web Projects/habitica_data/habitica_data.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Stardust",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bring the Light Reprise",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown : Something Impossible",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown Reprise",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bitter Wind Blown",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Midwinter Midnight",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Uplift",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/habitMeteor/habitMeteor.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Notes/Running Brighter Than Today",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting 2015",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Freewriting_2014",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Solstice/Beyond the Reach of God",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Solstice/Solstice 2014: Trigger Warnings and Potential Dire",
+		"/Users/raymondarnold/Dropbox/HumanistCulture/Solstice_2014 Resources/Setlist_Solstice2014",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/WonderWonder",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/She's my friend Grandma",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Solstice/Moloch ",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Solstice/Candlelit Story",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Find My Tribe",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Brighter Than Today",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Chasing Patterns",
+		"/Users/raymondarnold/Dropbox/HumanistCulture/Solstice_2014 Resources/SA-EA",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Move the World",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Notes/Solstice News Pitches",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Brighter Than Today (Hymn)",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Notes/Superintelligence_notes",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Notes/Thanksgiving",
+		"/Users/raymondarnold/Dropbox/HumanistCulture/Blogposts/Is Ritual Creepy?",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/The Sun is a Guy",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Classics/Do You Realize",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Gather Round My Fire",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Gratitude Journal",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Notes/Rational Ritual Retreat",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Kickstarter Press Kit",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Solstice/Kickstarter_writing",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Bring the Light",
+		"/Users/raymondarnold/Dropbox/HumanistCulture/textNotes/Pitching",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Wedding/Thomas and Allison",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Sunday Assembly/Climate Change Talk",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Personal shit/DO NOT ACTUALLY SEND FOR THE LOVE OF ALL",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Stroke by stroke and line by line..",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Five Thousand Years",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Then There Wasn't",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Effective Altruism/Values_the_solstice_provides",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Dancing With the GOds",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/GraceAnRay/ray.js",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/GraceAnRay/grace.css",
+		"/Users/raymondarnold/Dropbox/Adventure_Awaits/GraceAnRay/grace.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Tuesday",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Effective Altruism/EA_Summit_Freewriting",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/A Little Echo",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Song Lyrics/Walking so Tall",
+		"/Users/raymondarnold/.envs/debate.us_test/bin/activate",
+		"/Users/raymondarnold/.envs/debate.us_test/bin/postactivate",
+		"/Users/raymondarnold/Dropbox/Test_osterone/main.jsx",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/HTML.sublime-settings",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/logTimeboxes/logTimeboxes.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/bigTimer/bigTimer.coffee",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/raymondarnold/Library/Application Support/Sublime Text 2/Packages/User/Plain text.sublime-settings",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/timeboxLog/timeboxLog.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/argumeter/Freewrite",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/login/login.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/test.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/timer/timer.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/currentTimebox/currentTimebox.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/timeboxes/timeboxes.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/currentTimebox/tests/test_currentTimebox.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/packages/bootstrap-3/bootstrap-3/css/bootstrap.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/README.md",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/jquery.tagsinput.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/tagTracking/tagTracking.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/sidebar/sidebar.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/timeboxes/timeboxes.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/currentTimebox/currentTimebox.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/login/login.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/login/login.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/launch.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/jQuery-Tags-Input/jquery.tagsinput.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/auth/auth.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mysite/templates/admin/base_site.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/auth/auth.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/auth/tests/authTests.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/mongoose test/node_modules/mongoose/lib/drivers/node-mongodb-native/binary.js",
+		"/Users/raymondarnold/.meteorite/packages/bootstrap-3/mangasocial/meteor-bootstrap-3/63dd38968828bb8963636df93e9a1c45e2dfe67e/bootstrap-override.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Metasystem",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/tutorial_bootstrap/index.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/css/bootstrap.css",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/lifehack/tests/lifehackTests.coffee",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/client/loginHTML.coffee"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"mapCanvas",
+			"",
+			"mapCanvas",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"helpers",
+			"updateCh",
+			"update",
+			"helper",
+			"Timeboxes.",
+			".create",
+			"Timeboxes.c",
+			"Timebox.c",
+			"Timebox.",
+			"timebox",
+			"timeboxes.create",
+			"timebox",
+			"empireMessages",
+			"bigTimer",
+			"journeyMessage",
+			"messages",
+			"arrayify",
+			"updateCh",
+			"update",
+			"asdf",
+			"helpers",
+			"print tags",
+			"remove",
+			"createCharacter",
+			"events",
+			"tags_task",
+			"completeTimebox =",
+			"completeTimebox",
+			"userAddress",
+			"countdown",
+			"startTimebox",
+			"startTim",
+			"comment\"",
+			"comment",
+			"bigTimer",
+			"startTime",
+			"update",
+			"\"",
+			"sql.",
+			"sql",
+			"check",
+			"nav",
+			"print",
+			"HabitApi",
+			"habitapi",
+			"alert",
+			"Npm",
+			"require",
+			"trigger",
+			"\\\\\n",
+			"illumina",
+			"amy",
+			" \n",
+			"clever",
+			"thrive",
+			"future",
+			"\n",
+			"Bring",
+			"30 days",
+			"\"comment",
+			"comment",
+			"altruism",
+			"smil",
+			"smile",
+			"timebox",
+			"timeboxData",
+			"tag",
+			"left",
+			"tagData",
+			"$set",
+			"focus()",
+			"keydown",
+			"visibility",
+			"$(",
+			".rendered",
+			"$",
+			"addingTag",
+			"timeboxData_tags",
+			"$set",
+			"currentTimebox()",
+			"deleteTag",
+			"tag",
+			"timeboxdata",
+			".delete",
+			".rendered",
+			"events",
+			"Template.",
+			"bigTimer",
+			".timeboxLog.",
+			"timebox",
+			"current",
+			"updateTags",
+			".currentTimebox.",
+			"currentTimebox",
+			"bigTimer",
+			".currentTimebox.",
+			".bigTimer.",
+			"timebox",
+			"current",
+			"bigTimer",
+			"currentTime",
+			"Template.",
+			"Template.c",
+			"bigTimer",
+			"currentTimebox",
+			".currentTimebox.",
+			"currentTimebox =",
+			"currentTimebox",
+			"currentTimeboxID",
+			"currentTimebox\"",
+			"impo",
+			"footer",
+			"startT",
+			".timeboxes.",
+			".timeboxes",
+			"timeboxData",
+			"currentTimebox",
+			"latestTimebox",
+			"latestTimebox(",
+			"latestTimebox",
+			"latestTimebox()",
+			"tags: ",
+			"tagsField",
+			"latestTimebox =",
+			"rendered",
+			"$",
+			"onAdd",
+			"tag"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"'",
+			"",
+			".logTimeboxes.",
+			"logTimeboxes",
+			".bigTimer.",
+			".currentTimebox.",
+			".bigTimer.",
+			".timeboxLog.",
+			"currentTimebox",
+			"updateTags",
+			"#eeeeee",
+			"setCountdown_fromTimer()",
+			"timeFormat",
+			"currentTimebox",
+			"",
+			"btn-xs",
+			"btn-default btn-xs",
+			"btn-submit btn-xs",
+			"btn-xs",
+			"btn-default small",
+			"btn-default",
+			"btn-small",
+			"alert",
+			"testReset",
+			"\"",
+			"countdown",
+			"root.countdown",
+			"mapCanvas",
+			"hey oh hey, hey oh hi",
+			"Hey ho, Hey hi"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "timebox.coffee",
+					"settings":
+					{
+						"buffer_size": 17417,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								694,
+								694
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 329.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "apps/empire/client/empire.js",
+					"settings":
+					{
+						"buffer_size": 4675,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2753,
+								2753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "timebox.html",
+					"settings":
+					{
+						"buffer_size": 900,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								657,
+								657
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 100.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "apps/empire/client/empire.html",
+					"settings":
+					{
+						"buffer_size": 1626,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1302,
+								1302
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 438.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "apps/empire/client/empire.coffee",
+					"settings":
+					{
+						"buffer_size": 3762,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								248,
+								248
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1579.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "client/apps/sidebar/sidebar.html",
+					"settings":
+					{
+						"buffer_size": 550,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								165,
+								165
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "client/apps/bigTimer/bigTimer.html",
+					"settings":
+					{
+						"buffer_size": 1978,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								279,
+								279
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "timebox.css",
+					"settings":
+					{
+						"buffer_size": 5622,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3665,
+								3666
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3900.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "apps/empire/client/empire.css",
+					"settings":
+					{
+						"buffer_size": 931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								619,
+								619
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 34.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Meteor/timebox/apps/empire/client/empire.css"
+			],
+			[
+				"kick",
+				"Kickstarter Script"
+			],
+			[
+				"timebox",
+				"Meteor/timebox.js"
+			],
+			[
+				"navbar",
+				"ProgramTesting/mongoose test/node_modules/mongoose/lib/drivers/node-mongodb-native/binary.js"
+			],
+			[
+				"coff",
+				"Meteor/coffee-resounding/coffee-resounding.coffee"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/gtd.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 227.0,
+	"status_bar_visible": true
+}

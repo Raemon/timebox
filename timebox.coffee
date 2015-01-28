@@ -24,6 +24,7 @@ Done:
 '''
 
 root = global ? window
+empire = {}
 Timeboxes = new Meteor.Collection("Timeboxes");
 Tags = new Meteor.Collection("Tags")
 
@@ -125,7 +126,6 @@ if root.Meteor.isClient
             tags: tags
           }
         }
-    completeJourney(timebox.duration)
     Session.set("currentTimeboxID", undefined)
     timebox._id
 
@@ -212,6 +212,8 @@ if root.Meteor.isClient
         Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration - countdown}})
         updateTagTracking()
       if countdown < 0
+        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration}})
+        completeJourney(currentTimebox().duration)
         completeTimebox(Session.get("currentTimeboxID")) 
         # if Meteor.user().emails[0].address == "raemon777@gmail.com"
         alert("You have left the zone")
@@ -236,6 +238,12 @@ if root.Meteor.isClient
   Handlebars.registerHelper "timeRemaining", () ->
     Session.get("timeRemaining")
 
+  Handlebars.registerHelper "arrayify", (object) ->
+    array = []
+    for key in object
+      array.push(key)
+    array
+    
   Handlebars.registerHelper "currentTimebox", () ->
     Timeboxes.findOne(Session.get("currentTimeboxID"))
 
@@ -453,7 +461,6 @@ if root.Meteor.isClient
         onChange: (tag) ->
           if currentTimebox()
             Timeboxes.update(currentTimebox()._id, { $set: { tags: $("#tagsField").val().split(",")}})
-      console.log("asdf")
 
   root.Template.bigTimer.editing = () ->
       return Session.get("timerEditing")
@@ -541,11 +548,10 @@ if root.Meteor.isClient
 if root.Meteor.isServer
   if exports? then root = exports
   if window? then root = window
-
-
-
   Meteor.publish "Tags", ->
     Employees.find {}
+
+
 
 
 

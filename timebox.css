@@ -186,7 +186,7 @@ option.timerSelect{
 .tracking {
   padding:10px;
   font-size:12px;
-  min-height:300px
+/*  min-height:300px*/
 }
 .btn-timeframe {
   width:100%;
@@ -248,7 +248,7 @@ option.timerSelect{
 .bigTimer {
     color:grey;
     width:100%;
-
+    vertical-align: top;
 }
 
 .btn-link {
