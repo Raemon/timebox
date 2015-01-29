@@ -1,20 +1,12 @@
-.characterSheet {
+.empireSection {
     background-color: rgba(255, 230, 200, .2);
-    margin:0px 0px 20px 0px;
+    margin-bottom:20px;
     padding:8px 8px 12px 8px;
-    clear:both;
     text-align: left;
     font-size:12px;
 }
 
-.buildings {
-    background-color: rgba(255, 230, 200, .2);
-    margin:0px 0px 20px 0px;
-    padding:8px 8px 12px 8px;
-    clear:both;
-    text-align: left;
-    font-size:12px;
-}
+
 
 .buildHut {
   opacity:1;
@@ -50,4 +42,14 @@
    transition: opacity 2s ease-in-out;
    -moz-transition: opacity 2s ease-in-out;
    -webkit-transition: opacity 2s ease-in-out;
+}
+
+.craftslot {
+  margin:2px;
+  width:42px;
+  height:42px;
+  position: relative;
+  left:-15px;
+  float:right;
+  border: 1px solid white;
 }

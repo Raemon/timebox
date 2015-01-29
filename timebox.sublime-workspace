@@ -175,14 +175,6 @@
 			}
 		},
 		{
-			"file": "apps/empire/client/empire.js",
-			"settings":
-			{
-				"buffer_size": 4675,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "timebox.html",
 			"settings":
 			{
@@ -271,6 +263,7 @@
 	},
 	"file_history":
 	[
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.css",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/main.js",
@@ -278,7 +271,6 @@
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/models.py",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/habitfetch.py",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.css",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.html",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/empire_short/empire.js",
@@ -595,7 +587,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -628,33 +620,6 @@
 				},
 				{
 					"buffer": 1,
-					"file": "apps/empire/client/empire.js",
-					"settings":
-					{
-						"buffer_size": 4675,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2753,
-								2753
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "timebox.html",
 					"settings":
 					{
@@ -682,7 +647,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "apps/empire/client/empire.html",
 					"settings":
 					{
@@ -704,13 +669,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 438.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "apps/empire/client/empire.coffee",
 					"settings":
 					{
@@ -732,13 +697,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1579.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"file": "client/apps/sidebar/sidebar.html",
 					"settings":
 					{
@@ -766,7 +731,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "client/apps/bigTimer/bigTimer.html",
 					"settings":
 					{
@@ -794,7 +759,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "timebox.css",
 					"settings":
 					{
@@ -822,7 +787,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 7,
 					"file": "apps/empire/client/empire.css",
 					"settings":
 					{
