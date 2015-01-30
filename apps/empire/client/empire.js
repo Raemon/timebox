@@ -136,7 +136,7 @@ Template.empireTab.empireActivated = function () {
 }
 
 Template.empireTab.empireUpToDate = function () {
-	if (Characters.findOne({userID: Meteor.userId()}).stats.iron != undefined) {
+	if (Characters.findOne({userID: Meteor.userId()}).stats.huts != undefined) {
 		return true
 	} else {
 		return false
@@ -172,4 +172,14 @@ Template.buildings.events({
 			updateStats("huts", 1)
 		}
 	}
+})
+
+Template.crafting.helpers({
+	enoughWood: function (wood) {
+		if (currentCharacter().stats.wood > wood) {
+			return "enough"
+		} else {
+			return "notEnough"
+		}
+	},
 })

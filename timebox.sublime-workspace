@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"craf",
+				"craftGrid"
+			],
+			[
+				"buil",
+				"buildingHut"
+			],
+			[
+				"border",
+				"border"
+			],
+			[
 				"curren",
 				"currentCharacter"
 			],
@@ -124,10 +136,6 @@
 				"forgottenPassword"
 			],
 			[
-				"border",
-				"border-radius"
-			],
-			[
 				"compl",
 				"completeTimebox"
 			],
@@ -183,26 +191,37 @@
 			}
 		},
 		{
+			"file": "apps/empire/client/crafting.html",
+			"settings":
+			{
+				"buffer_size": 1094,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": ".empireSection {\n    background-color: rgba(255, 230, 200, .2);\n    margin-bottom:20px;\n    padding:8px 8px 12px 8px;\n    text-align: left;\n    font-size:12px;\n}\n\n.height190 {\n  min-height: 190px;\n}\n\n\n.buildHut {\n  opacity:1;\n  background-color: rgba(255, 230, 200, .5);\n  padding:5px;\n}\n\n.buildHut.notEnough {\n  opacity:.5;\n}\n\n.characterNameLabel {\n	font-size:10px;\n	opacity:.5;\n}\n#characterName {\n	font-size:14px;\n	font-weight:900;\n  padding-bottom:5px;\n}\n\n#empireMessages {\n    white-space:pre-line;\n    word-wrap:break-word;\n    font-style:italic;\n    color:#BBBCAA;\n    position:relative;\n    top:-50px;\n}\n\n.fade {\n   opacity: 1;\n   transition: opacity 2s ease-in-out;\n   -moz-transition: opacity 2s ease-in-out;\n   -webkit-transition: opacity 2s ease-in-out;\n}\n\n\n\n.craftGrid {\n  padding-left:22px;\n  float:left;\n}\n.craftButtons {\n  float:right;\n  text-align: center;\n  width:50px;\n  font-size: 10px;\n  opacity:.5;\n}\n.craftButtons.ready {\n  opacity:1;\n  cursor:pointer;\n}\n\n.buildButton {\n  margin:2px;\n  border: 1px solid white;\n  background-color:#332211;\n}\n\n\n.component {\n  min-height:40px;\n  padding-left:15px;\n  font-size:12px;\n  cursor:pointer;\n}\n\n.componentText {\n  margin:10px 20px 10px 20px\n}\n\n.icon {\n  margin:2px;\n  width:30px;\n  height:30px;\n  float:left;\n  border: 1px solid white;\n}\n\n.wood {\n  background-color:#BB9966;\n}\n.stone {\n  background-color:#777777;\n}\n\n.components {\n  padding:5px;\n  padding-left:10px;\n}\n\n.icon.wood.selectwood {\n  border:5px solid white;\n}\n.icon.stone.selectstone {\n  border:5px solid white;\n}\n",
+			"file": "apps/empire/client/empire.css",
+			"file_size": 1541,
+			"file_write_time": 1422648444000000,
+			"settings":
+			{
+				"buffer_size": 1539,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "apps/empire/client/empire.html",
 			"settings":
 			{
-				"buffer_size": 1626,
+				"buffer_size": 1651,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "apps/empire/client/empire.coffee",
+			"file": "apps/empire/client/empire.js",
 			"settings":
 			{
-				"buffer_size": 3762,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "client/apps/sidebar/sidebar.html",
-			"settings":
-			{
-				"buffer_size": 550,
+				"buffer_size": 4844,
 				"line_ending": "Unix"
 			}
 		},
@@ -219,14 +238,6 @@
 			"settings":
 			{
 				"buffer_size": 5622,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "apps/empire/client/empire.css",
-			"settings":
-			{
-				"buffer_size": 931,
 				"line_ending": "Unix"
 			}
 		}
@@ -263,9 +274,11 @@
 	},
 	"file_history":
 	[
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/crafting.js",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/sidebar/sidebar.html",
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.css",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/apps/empire/client/empire.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/main.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/main.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Freelance/Nathan/HabitFetch/models.py",
@@ -275,7 +288,6 @@
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.coffee",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/empire_short/empire.js",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/bigTimer/bigTimer.html",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/sidebar/sidebar.html",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/tagTracking/tagTracking.html",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/apps/login/login.html",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/timebox.html",
@@ -389,8 +401,7 @@
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Getting Things Done/Metasystem",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/ProgramTesting/tutorial_bootstrap/index.html",
 		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/client/css/bootstrap.css",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/lifehack/tests/lifehackTests.coffee",
-		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/timebox/tests/client/loginHTML.coffee"
+		"/Users/raymondarnold/Dropbox/SublimeDocs/Meteor/lifehack/tests/lifehackTests.coffee"
 	],
 	"find":
 	{
@@ -401,6 +412,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"",
 			"mapCanvas",
 			"",
 			"mapCanvas",
@@ -412,6 +424,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"umn",
+			"float",
+			"min-",
+			"border",
 			"helpers",
 			"updateCh",
 			"update",
@@ -535,11 +551,7 @@
 			"latestTimebox()",
 			"tags: ",
 			"tagsField",
-			"latestTimebox =",
-			"rendered",
-			"$",
-			"onAdd",
-			"tag"
+			"latestTimebox ="
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -547,6 +559,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"",
 			"'",
 			"",
 			".logTimeboxes.",
@@ -587,7 +600,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -613,7 +626,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 329.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -630,8 +643,8 @@
 						"selection":
 						[
 							[
-								657,
-								657
+								145,
+								145
 							]
 						],
 						"settings":
@@ -641,29 +654,30 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 100.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "apps/empire/client/empire.html",
+					"file": "apps/empire/client/crafting.html",
 					"settings":
 					{
-						"buffer_size": 1626,
+						"buffer_size": 1094,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1302,
-								1302
+								89,
+								89
 							]
 						],
 						"settings":
 						{
+							"auto_name": "",
 							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
@@ -676,46 +690,46 @@
 				},
 				{
 					"buffer": 3,
-					"file": "apps/empire/client/empire.coffee",
+					"file": "apps/empire/client/empire.css",
 					"settings":
 					{
-						"buffer_size": 3762,
+						"buffer_size": 1539,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								248,
-								248
+								977,
+								977
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"syntax": "Packages/CSS/CSS.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 833.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "client/apps/sidebar/sidebar.html",
+					"file": "apps/empire/client/empire.html",
 					"settings":
 					{
-						"buffer_size": 550,
+						"buffer_size": 1651,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								165,
-								165
+								1329,
+								1329
 							]
 						],
 						"settings":
@@ -725,13 +739,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 449.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
+					"file": "apps/empire/client/empire.js",
+					"settings":
+					{
+						"buffer_size": 4844,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3967,
+								3967
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "client/apps/bigTimer/bigTimer.html",
 					"settings":
 					{
@@ -759,7 +800,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "timebox.css",
 					"settings":
 					{
@@ -770,8 +811,8 @@
 						"selection":
 						[
 							[
-								3665,
-								3666
+								2632,
+								2637
 							]
 						],
 						"settings":
@@ -781,35 +822,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3900.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "apps/empire/client/empire.css",
-					"settings":
-					{
-						"buffer_size": 931,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								619,
-								619
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

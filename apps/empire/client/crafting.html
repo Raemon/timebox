@@ -1,0 +1,41 @@
+<template name="crafting">
+  <div class="crafting">
+    {{> componentSelection}}
+    <br>
+    <div class="empireSection height190">
+      <div class="craftGrid">
+        {{#each craftGrid}}
+          <div class="row">
+            {{#each this}}
+              <span class="craftslot icon {{this.material}}"></span>
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+      <div class="craftButtons {{buildReady}}">
+        <div class="buildButton">
+          Build<br>
+          {{building}}
+        </div>
+        <br>
+        <div>
+          {{woodCost}}
+          {{stoneCost}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="componentSelection">
+  <div class="componentSelection">
+    <div class="component woodSelect ">
+      <span class="icon wood select{{selected}}"></span>
+      <span class="componentText">Wooden Plank (5 Wood)</span>
+    </div>
+    <div class="component stoneSelect ">
+      <span class="icon stone select{{selected}}"></span>
+      <span class="componentText">Stone Wall (5 Stone)</span>
+    </div>
+  </div>
+</template>

@@ -6,6 +6,9 @@
     font-size:12px;
 }
 
+.height190 {
+  min-height: 190px;
+}
 
 
 .buildHut {
@@ -44,12 +47,67 @@
    -webkit-transition: opacity 2s ease-in-out;
 }
 
-.craftslot {
-  margin:2px;
-  width:42px;
-  height:42px;
-  position: relative;
-  left:-15px;
+
+
+.craftGrid {
+  padding-left:22px;
+  float:left;
+}
+.craftButtons {
   float:right;
+  text-align: center;
+  width:50px;
+  font-size: 10px;
+  opacity:.5;
+}
+.craftButtons.ready {
+  opacity:1;
+  cursor:pointer;
+}
+
+
+.buildButton {
+  margin:2px;
   border: 1px solid white;
+  background-color:#332211;
+}
+
+
+
+.component {
+  min-height:40px;
+  padding-left:15px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.componentText {
+  margin:10px 20px 10px 20px
+}
+
+.icon {
+  margin:2px;
+  width:30px;
+  height:30px;
+  float:left;
+  border: 1px solid white;
+}
+
+.wood {
+  background-color:#BB9966;
+}
+.stone {
+  background-color:#777777;
+}
+
+.components {
+  padding:5px;
+  padding-left:10px;
+}
+
+.icon.wood.selectwood {
+  border:5px solid white;
+}
+.icon.stone.selectstone {
+  border:5px solid white;
 }
