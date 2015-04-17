@@ -7,7 +7,6 @@ standard-app-packages
 insecure
 coffeescript
 mocha-web
-autopublish
 accounts-base
 accounts-password
 accounts-ui

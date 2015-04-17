@@ -1,3 +1,5 @@
+Session.set("empireTab", 1)
+
 createCharacter = function (userID) {
 	console.log ("Created Character!!!!!!!!")
 	return Characters.insert({
@@ -51,6 +53,9 @@ updateStats = function (stat, amount) {
 		stats[stat] = 0
 	}
 	stats[stat] = stats[stat] + amount
+	if (stats[stat] < 0) {
+		stats[stat] = 0
+	}
 	Characters.update(currentCharacter()._id, {$set: {stats: stats}})
 	console.log(currentCharacter().stats)
 }
@@ -111,7 +116,24 @@ Template.empireTab.events = {
 	'click #updateCharacter': function () {
 		updateCharacter()
 	},
+	'click #empireHeader': function () {
+		tabSet = Session.get("empireTab")
+		return Session.set("empireTab", !tabSet)
+	}
 }
+
+Template.empireTab.helpers({
+	tabOpen: function () {
+		return Session.get("empireTab")
+	},
+	headerIcon: function () {
+		if (Session.get("empireTab")) {
+			return '▼'
+		} else {
+			return '►'
+		}
+	}
+})
 
 Template.characterSheet.events = {
 	'click #characterName': function () {

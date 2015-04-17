@@ -3,6 +3,7 @@
 
 html, body {
     height: 100%;
+    font-size:12px;
 }
 
 * {
@@ -23,7 +24,7 @@ a {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+    margin: 0 auto -155px; /* the bottom margin is the negative value of the footesolidr's height */
 }
 
 .footer, .push {
@@ -120,6 +121,25 @@ option.timerSelect{
     background-color:rgba(255,255,255,.2);
 }
 
+.header {
+    margin:1px 0px 1px 0px;
+    font-weight:bold;
+    font-size:13px;
+    padding:8px;
+    background-color: rgba(255, 230, 200, .1);
+    border-color:grey;
+    border-style:solid;
+    border-top-width:1px;
+    border-left-width:0px;
+    border-bottom-width:1px;
+    border-right-width:0px;
+    /*border-color:white;*/
+}
+
+.headerArrow {
+  float:right;
+  padding-right:10px;
+}
 
 .timebox {
     background-color: rgba(255, 230, 200, .2);
@@ -151,7 +171,7 @@ option.timerSelect{
 
 .loginBox {
     /*background-color: rgba(255, 230, 200, .4);*/
-    padding:10px;
+    padding:20px;
     font-size:11px;
 }
 

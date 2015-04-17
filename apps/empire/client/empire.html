@@ -2,19 +2,26 @@
   <div class="empireTab">
     {{#if empireActivated}}
       {{#if empireUpToDate}}
-        {{> characterSheet}}
-        {{> crafting}}
+        <div id="empireHeader" class="header">
+          Task Empire <span class="headerArrow">{{headerIcon}}</span>
+        </div>
+        {{#if tabOpen}}
+          {{> characterSheet}}
+          {{> crafting}}
+        {{/if}}
       {{/if}}
     {{/if}}
     {{#unless empireUpToDate}}
-      {{#unless empireActivated}}
-        Want to gamify the experience?<br>
-        <a id="activateCharacter">Activate Task Empire</a>
-      {{/unless}}
-      {{#if empireActivated}}
-        Your character's out of date<br>
-        <a id="updateCharacter">Update Character</a>
-      {{/if}}
+      <div class="empireSection">
+        {{#unless empireActivated}}
+          Want to gamify the experience?<br>
+          <a id="activateCharacter">Activate Task Empire</a>
+        {{/unless}}
+        {{#if empireActivated}}
+          Your character's out of date<br>
+          <a id="updateCharacter">Update Character</a>
+        {{/if}}
+      </div>
     {{/unless}}
   </div>
 </template>
@@ -47,6 +54,15 @@
       {{#if stats.huts}}
         <br>
         Huts: {{stats.huts}}<br>
+      {{/if}}
+      {{#if stats.temples}}
+        Temples: {{stats.temples}}<br>
+      {{/if}}
+      {{#if stats.lodges}}
+        Lodges: {{stats.lodges}}<br>
+      {{/if}}
+      {{#if stats.lumbermills}}
+        Lodges: {{stats.lumbermills}}<br>
       {{/if}}
     </div>
   </div>

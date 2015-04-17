@@ -2,8 +2,6 @@
     background-color: rgba(255, 230, 200, .2);
     margin-bottom:20px;
     padding:8px 8px 12px 8px;
-    text-align: left;
-    font-size:12px;
 }
 
 .height190 {
@@ -47,6 +45,14 @@
    -webkit-transition: opacity 2s ease-in-out;
 }
 
+.buildingIcon {
+  min-width:50px;
+  min-height:50px;
+  margin-top:2px;
+  margin-bottom:10px;
+  /*background-color:white;*/
+  border: 1px solid grey;
+}
 
 
 .craftGrid {
@@ -65,13 +71,12 @@
   cursor:pointer;
 }
 
-
 .buildButton {
-  margin:2px;
+  margin-bottom:10px;
+  width:50px;
   border: 1px solid white;
   background-color:#332211;
 }
-
 
 
 .component {

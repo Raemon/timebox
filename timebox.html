@@ -21,7 +21,6 @@
 
         <!-- Page content -->
         <div id="page-content-wrapper">
-          <!-- {{> header}} -->
           {{> bigTimer}}
           {{> empireMessages}}
           <!-- {{> testing}} -->
@@ -29,13 +28,17 @@
     </div>
 </body>
 
-<template name="header">
-  <h3 class="title">Get In the Zone</h3>
-</template>
-
 <template name="testing">
   <div class="footer">
     {{> mochaTestReport}}
     {{> serverTestReport}}
+  </div>
+</template>
+
+<template name="sidebarTabs">
+  <div class="sidebar">
+    <!-- {{> empireTab}} -->
+    {{> tracking}}
+    {{> logTimeboxes}}
   </div>
 </template>

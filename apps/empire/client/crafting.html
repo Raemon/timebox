@@ -4,6 +4,7 @@
     <br>
     <div class="empireSection height190">
       <div class="craftGrid">
+        
         {{#each craftGrid}}
           <div class="row">
             {{#each this}}
@@ -13,11 +14,15 @@
         {{/each}}
       </div>
       <div class="craftButtons {{buildReady}}">
+        <div class="buildingIcon">
+          {{#if building}}
+            <img src="/images/{{building}}.png?dummy=8484744">
+          {{/if}}
+        </div>
         <div class="buildButton">
           Build<br>
           {{building}}
         </div>
-        <br>
         <div>
           {{woodCost}}
           {{stoneCost}}

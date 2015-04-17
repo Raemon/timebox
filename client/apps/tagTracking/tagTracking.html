@@ -1,31 +1,35 @@
 <template name="tracking">
-  <div class="tracking">
-    <div class="btn-group btn-timeframe"> 
-      <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
-        {{trackingTimeframe}} <span class="caret"></span>
-      </button>
-        <ul class="dropdown-menu">
-          <li class="timeframe"><a href="#">Today</a></li>
-          <li class="timeframe"><a href="#">7 Days</a></li>
-          <li class="timeframe"><a href="#">30 Days</a></li>
-          <li class="timeframe"><a href="#">One Year</a></li>
-        </ul>
-    </div>
-
-    <br><br>
-
-      Total Time: {{totalTime}}
-
-      {{#each timeframeTags}}
-        {{> tagData}}
-      {{/each}}
-
-  <!-- 
-    {{#each userTags}}
-      {{> tagData}}
-    {{/each}} 
-  -->
+  <div id="trackingHeader" class="header">
+    Tag Tracking <span class="headerArrow">{{headerIcon}}</span>
   </div>
+  {{#if tabOpen}}
+    <div class="tracking tab">
+      <div class="btn-group btn-timeframe">
+        <button class="btn dropdown-toggle btn-timeframe" type="button" data-toggle="dropdown">
+          {{trackingTimeframe}} <span class="caret"></span>
+        </button>
+          <ul class="dropdown-menu">
+            <li class="timeframe"><a href="#">Today</a></li>
+            <li class="timeframe"><a href="#">7 Days</a></li>
+            <li class="timeframe"><a href="#">30 Days</a></li>
+            <li class="timeframe"><a href="#">One Year</a></li>
+          </ul>
+      </div>
+
+      <br><br>
+        Loaded Timeboxes: {{timeboxes}}<br>
+        Total Time: {{totalTime}}
+
+        {{#each timeframeTags}}
+          {{> tagData}}
+        {{/each}}
+    <!-- 
+      {{#each userTags}}
+        {{> tagData}}
+      {{/each}} 
+    -->
+    </div>
+  {{/if}}
 </template> 
 
           <template name="tagData">

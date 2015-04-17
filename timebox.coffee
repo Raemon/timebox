@@ -30,7 +30,7 @@ Tags = new Meteor.Collection("Tags")
 
 #Empire Collections
 Characters = new Meteor.Collection("Characters")
-
+Buildings = new Meteor.Collection("Buildings")
 
 if root.Meteor.isClient
 
@@ -40,6 +40,7 @@ if root.Meteor.isClient
   Session.set("currentUserID", undefined)
   Session.set("timeboxLimit", 8)
   Session.set("trackingTimeframe", "Today")
+  Session.set("trackingTab", 0)
   timerRunning = false
 
   fixThings = () ->
@@ -100,6 +101,7 @@ if root.Meteor.isClient
       userID: Meteor.userId(),
       duration: countdown,
       final_duration: 0,
+      distractions: "",
       startTime: new Date(),
       endTime: undefined,
       complete: "In Progress",
@@ -107,6 +109,7 @@ if root.Meteor.isClient
     }
     timerRunning = true
     Session.set("currentTimeboxID", timeboxID)
+    console.log(timeboxID)
     timeboxID
 
 
@@ -202,8 +205,6 @@ if root.Meteor.isClient
       # countdown's Date(). This should usually about 1 second
       new_countdownTime = new Date()
       countdown -= (new_countdownTime - previous_countdownTime)/1000
-      console.log((new_countdownTime - previous_countdownTime)/1000)
-      console.log countdown
       previous_countdownTime = new_countdownTime
       # countdown -= 1;
       if countdown >= 0
@@ -212,17 +213,13 @@ if root.Meteor.isClient
         Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration - countdown}})
         updateTagTracking()
       if countdown < 0
-        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration}})
-        completeJourney(currentTimebox().duration)
-        completeTimebox(Session.get("currentTimeboxID")) 
-        # if Meteor.user().emails[0].address == "raemon777@gmail.com"
-        alert("You have left the zone")
         audio = new Audio "cChord.mp3"
         audio.play()
+        Timeboxes.update(currentTimebox()._id, { $set: {final_duration: currentTimebox().duration}})
+        # completeJourney(currentTimebox().duration)
+        completeTimebox(Session.get("currentTimeboxID")) 
 
       countdown
-
-
 
   setInterval () -> 
       timer()
@@ -241,7 +238,7 @@ if root.Meteor.isClient
   Handlebars.registerHelper "arrayify", (object) ->
     array = []
     for key in object
-      array.push(key)
+      array.push(key) 
     array
     
   Handlebars.registerHelper "currentTimebox", () ->
@@ -368,9 +365,25 @@ if root.Meteor.isClient
     "click .timeframe": (e) ->
       Session.set("trackingTimeframe", e.target.innerHTML)
       updateTagTracking()
+      Meteor.subscribe("Timeboxes", Meteor.userId(), 250)
+    "click #trackingHeader": () ->
+      tabSet = Session.get("trackingTab")
+      Session.set("trackingTab", !tabSet)
 
   root.Template.tracking.trackingTimeframe = () ->
     Session.get("trackingTimeframe")
+
+  root.Template.tracking.timeboxes = () ->
+    Timeboxes.find().count()
+
+  root.Template.tracking.tabOpen = () ->
+    Session.get("trackingTab")
+
+  root.Template.tracking.headerIcon = () ->
+    if Session.get("trackingTab")
+      return '▼'
+    else
+      return '►'
 
 
   root.Template.tracking.timeframeTags = () ->
@@ -544,16 +557,33 @@ if root.Meteor.isClient
     updateTagTracking()
 
 
+  Deps.autorun () ->
+    if Meteor.userId()
+      console.log("Loading User", Meteor.userId())
+      Meteor.subscribe("Tags")
+      Meteor.subscribe("Characters")
+      Meteor.subscribe("Timeboxes", Meteor.userId(), 100)
+      console.log(Timeboxes.find().count())
+    else
+      Meteor.subscribe("NoUserTimeboxes", 5)
 
 if root.Meteor.isServer
   if exports? then root = exports
   if window? then root = window
   Meteor.publish "Tags", ->
-    Employees.find {}
+    Tags.find {}
 
+  Meteor.publish "Timeboxes", (currentUserID, timeboxLimit) ->
+    Timeboxes.find({userID: currentUserID}, {sort: {startTime: -1}, limit: timeboxLimit})
 
+  Meteor.publish "NoUserTimeboxes", (timeboxLimit) ->
+    Timeboxes.find({}, {sort: {startTime: -1}, limit: timeboxLimit})
 
+  Meteor.publish "AllTimeboxes", (currentUserID) ->
+    Timeboxes.find({userID: currentUserID})
 
+  Meteor.publish "Characters", ->
+    Characters.find({})
 
 
 root.currentTimebox = currentTimebox
@@ -565,8 +595,6 @@ root.secondFormat = secondFormat
 root.setTimer_and_countdown = setTimer_and_countdown
 root.timer = timer
 root.testReset = testReset
-
-console.log(root)
 
 
 
